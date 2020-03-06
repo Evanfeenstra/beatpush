@@ -1,0 +1,65 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+
+<dom-module id="color-card">
+<style>
+	:host {
+    min-width: 240px;
+    padding:0;
+	}
+	.cb{
+		min-width: initial;
+		margin: 1px;
+		border-radius: 0px;
+	}
+  #cb_erase{
+    padding:0.7em 0.57em;
+  }
+
+  #assignto{
+    margin:8px 12px;
+  }
+  </style>
+
+<template>
+
+  <div id="assignto">Assign to Color:</div>
+
+	<div class="vertical layout" style="width: 90%; height: 220px; margin: 8px 5%;">
+      <div class="horizontal layout flex">
+        <paper-button class='cb flex layout' id="cb_1" style="background-color:rgb(92, 107, 192);" on-tap="tap_cb"></paper-button>
+        <paper-button class='cb flex layout' id="cb_2" style="background-color:rgb(255, 152, 0);" on-tap="tap_cb"></paper-button>
+        <paper-button class='cb flex layout' id="cb_3" style="background-color:rgb(76, 175, 80);" on-tap="tap_cb"></paper-button>
+      </div>
+      <div class="horizontal layout flex">
+        <paper-button class='cb flex layout' id="cb_4" style="background-color:rgb(33, 150, 243);" on-tap="tap_cb"></paper-button>
+        <div class='cb flex layout' id="cb_erase" style="background-color:white;"></div>
+        <paper-button class='cb flex layout' id="cb_5" style="background-color:rgb(158, 224, 3);" on-tap="tap_cb"></paper-button>
+      </div>
+      <div class="horizontal layout flex">
+        <paper-button class='cb flex layout' id="cb_6" style="background-color:rgb(171, 71, 188);" on-tap="tap_cb"></paper-button>
+        <paper-button class='cb flex layout' id="cb_7" style="background-color:rgb(239, 83, 80);" on-tap="tap_cb"></paper-button>
+        <paper-button class='cb flex layout' id="cb_8" style="background-color:rgb(141, 110, 99);" on-tap="tap_cb"></paper-button>
+      </div>
+    </div>
+
+</template>
+
+
+<script>
+Polymer({
+
+  is: 'color-card',
+
+  tap_cb: function(event) {
+    var string=event.target.id.toString()
+    var num = string.split("_").pop();
+
+    this.fire("color",num)
+
+  }
+
+});
+</script>
+</dom-module>

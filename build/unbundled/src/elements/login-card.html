@@ -1,0 +1,225 @@
+<html><head><link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/firebase-element/firebase-auth.html">
+
+
+</head><body><dom-module id="login-card">
+<style>
+	iron-icon {
+		margin-right: 9px;
+	}
+
+	.sign-in {
+    display: inline-block;
+    color: white;
+    width: 290px;
+    border-radius: 5px;
+    white-space: nowrap;
+    margin:8px 0;
+    transition: all 300ms ease-in;
+    -webkit-transition: all 300ms ease-in;
+    text-align:left;
+    padding:0;
+    text-transform: none !important;
+  }
+
+  #goog{
+    background: rgb(214,65,54);
+  }
+
+  #faceboo{
+    background: rgb(75,110,170);
+  }
+
+  .sign-in:hover {
+    cursor: pointer;
+  }
+
+  .google-sign-in-icon {
+    background: url('/images/google.png') transparent 5px 50% no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    width: 42px;
+    height: 42px;
+    border-right: gray 1px solid;
+  }
+
+  .facebook-sign-in-icon {
+    background: url('/images/facebook.png') transparent 5px 50% no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    width: 42px;
+    height: 42px;
+    border-right: gray 1px solid;
+  }
+
+  .sign-in-label {
+    font-size: 14px;
+    width:100%;
+    /* Use the Roboto font that is loaded in the <head> */
+    font-family: 'Roboto', sans-serif;
+  }
+
+
+	.mid{
+	  text-align: center;
+	  display: inline-block;
+	  width:200px;
+	}
+
+	.trans{
+	  transform: translateY(-58px);
+	  -webkit-transform: translateY(-58px);
+	}
+	.trans2{
+	  transform: translateY(-116px);
+	  -webkit-transform: translateY(-116px);
+	}
+	.trans3{
+	  transform: translateY(-278px);
+	  -webkit-transform: translateY(-278px);
+	}
+
+
+	#emailpass{
+	  text-align: center;
+	  width:300px;
+	  margin-top:14px;
+	  transition: all 300ms ease-in;
+	  -webkit-transition: all 300ms ease-in;
+	}
+
+	#submit {
+	  color: #fff;
+	  background-color: #26a69a;
+	  text-align: center;
+	  letter-spacing: .5px;
+	  cursor: pointer; 
+	  border: none;
+	  border-radius: 2px;
+	  display: inline-block;
+	  height: 36px;
+	  line-height: 36px;
+	  outline: 0;
+	  padding: 0 2rem;
+	  vertical-align: middle;
+	  margin-top:19px;
+	  text-transform: none !important;
+	  transition: all 300ms ease-in;
+	  -webkit-transition: all 300ms ease-in;
+	}
+
+	#submit:hover {
+	    background-color: #2bbbad; }
+
+
+	#noaccount{
+	  margin-top: 16px;
+	  display: inline-block;
+	}
+	#register{
+	  text-decoration: underline;
+	  text-transform: none !important;
+	  color:#1bab9d;
+	  display: inline-block;
+	  margin-bottom: 19px;
+	  cursor: pointer;
+	}
+	#register:hover{
+	  color:#0b9b8d;
+
+	}
+
+	#submission{
+	    transition: all 300ms ease-in;
+	    -webkit-transition: all 300ms ease-in;
+	}
+
+	#passagain{
+	  opacity: 0;
+	  transition: opacity 300ms ease-in;
+	  -webkit-transition: opacity 300ms ease-in;
+	}
+
+	#social{
+	  transition: opacity 300ms ease-in;
+	  -webkit-transition: opacity 300ms ease-in;
+	}
+
+	#inputs{
+	  transition: opacity 300ms ease-in;
+	  -webkit-transition: opacity 300ms ease-in;
+	}
+
+	#errory{
+	  transition: all 300ms ease-in;
+	  -webkit-transition: all 300ms ease-in;
+	}
+
+	#noaccount{
+	  transition: opacity 300ms ease-in;
+	  -webkit-transition: opacity 300ms ease-in;
+	  margin-top:8px !important;
+	}
+
+	#backdrop{
+		position: absolute;
+		top:-50px;
+		bottom: 0;
+		left:0;
+		right:0;
+		height:490px;
+		background: radial-gradient(rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.3) 6%,transparent 60%); /* Standard syntax */
+		text-align: center;
+	}
+
+	#errory{
+		background-color:rgba(255,0,0,0.5);
+		padding:10px 10px;
+		text-align: center;
+		width:260px;
+		color:white;
+		font-family: 'Roboto', sans-serif;
+    	font-size: 14px;
+    	-webkit-font-smoothing: antialiased;
+	}
+  </style>
+
+<template>
+
+    <firebase-auth id="auth" location="https://beatpush.firebaseio.com" provider="[[provider]]" user="{{user}}" on-error="doerror" on-user-created="userCreated">
+    </firebase-auth>
+
+	<div id="social" class="vertical layout" style$="[[_socialStyle(createAccount)]]">
+    <paper-button class="sign-in" id="goog" tabindex="0" on-tap="signGoogle" disabled="[[disableG(user,createAccount)]]" style$="[[_googleStyle(user)]]">
+      <span class="google-sign-in-icon"></span>
+      <div class="mid"><span class="sign-in-label">[[_googleString(user)]]</span></div>
+    </paper-button>
+
+    <paper-button id="faceboo" tabindex="1" on-tap="signFacebook" disabled="[[disableF(user,createAccount)]]" class$="[[_facebooClass(user)]]" style$="[[_facebookStyle(user)]]">
+      <span class="facebook-sign-in-icon"></span>
+      <div class="mid"><span class="sign-in-label">[[_facebookString(user)]]</span></div>
+    </paper-button>
+    </div>
+
+    <div id="emailpass" class$="[[_emailpassClass(createAccount)]]" style$="[[_emailpassStyle(user)]]">
+      <div id="inputs">
+        <strong>[[_OrString(createAccount)]]</strong>
+        <paper-input autofocus="" id="email" label="Email:" disabled="[[disabler(user)]]" on-keypress="_enter"></paper-input>
+        <paper-input id="password" label="Password:" disabled="[[disabler(user)]]" on-keypress="_enter"></paper-input>
+        <paper-input id="passagain" label="Password again:" disabled="[[disabler(user)]]" style$="[[_passagainStyle(createAccount)]]" on-keypress="_enter"></paper-input>
+      </div>
+      <div id="submission" class$="[[_submissionClass(createAccount)]]">
+        <paper-button id="submit" on-tap="submit" disabled="[[disableP(user)]]" class$="[[_submitClass(user)]]">[[_Submit(user,createAccount)]]</paper-button>
+        <div id="noaccount">[[_accountString(createAccount)]]<paper-button on-tap="register" id="register" disabled="[[disabler(user)]]">[[_registerString(createAccount)]]</paper-button></div>
+      </div>
+    </div>
+
+    <div id="errory" class$="[[_errorClass(createAccount)]]"></div>
+
+    <div id="backdrop"><img src="../images/spinner128.gif" height="50px" width="50px" style="margin-top:215px"></div>
+
+</template>
+
+
+<script>Polymer({is:"login-card",properties:{user:{type:Object,observer:"userChange"},userName:{type:String,notify:!0},uid:{type:String,notify:!0}},_enter:function(t){13===t.keyCode&&(t.preventDefault(),this.submit())},userChange:function(){this.$.backdrop.style.display="none",this.$.errory.style.display="none",this.createAccount=!1,this.user?(this.uid=this.user.uid,this.user.google?this.userName=this.user.google.displayName:this.user.facebook?this.userName=this.user.facebook.displayName:"password"==this.user.provider&&(this.userName=this.user.password.email.split("@")[0],this.$.inputs.style.opacity=0,this.$.noaccount.style.opacity=0)):(this.userName="You",this.uid=null,this.$.inputs.style.opacity=1,this.$.noaccount.style.opacity=1)},ready:function(){this.$.backdrop.style.display="none",this.$.errory.style.display="none",this.userName="You",this.createAccount=!1},signOut:function(){this.$.auth.logout()},signGoogle:function(){this.$.backdrop.style.display="block",this.async(function(){this.$.backdrop.style.display="none"},9e3),this.user?this.$.auth.logout():(this.provider="google",this.$.auth.login())},signFacebook:function(){this.$.backdrop.style.display="block",this.async(function(){this.$.backdrop.style.display="none"},9e3),this.user?this.$.auth.logout():(this.provider="facebook",this.$.auth.login())},submit:function(){if(this.user)this.$.backdrop.style.display="block",this.async(function(){this.$.backdrop.style.display="none"},9e3),this.$.auth.logout();else if(this.$.email.value&&this.$.password.value)if(this.$.backdrop.style.display="block",this.async(function(){this.$.backdrop.style.display="none"},9e3),this.createAccount){this.provider="password";var t=this.$.password.value,i=this.$.passagain.value;t==i?this.$.auth.createUser(this.$.email.value,t):this.doerror({detail:"Error: Passwords do not match"})}else this.provider="password",this.$.auth.login({email:this.$.email.value,password:this.$.password.value})},userCreated:function(t){this.$.auth.login({email:this.$.email.value,password:this.$.password.value})},register:function(){this.$.errory.style.display="none",this.createAccount?this.createAccount=!1:this.createAccount=!0},disabler:function(t){return!!t},disableP:function(t){var i=!1;return t&&(i=!0,"password"==t.provider&&(i=!1)),i},disableG:function(t,i){var s=!1;return i?s=!0:t&&(s=!0,t.google&&(s=!1)),s},disableF:function(t,i){var s=!1;return i?s=!0:t&&(s=!0,t.facebook&&(s=!1)),s},_Submit:function(t,i){var s="Log In";return t?s="Log Out":i&&(s="Register"),s},_OrString:function(t){return t?"Create Account":"Or"},_accountString:function(t){return t?"Already have an account?":"Don't have an account yet?"},_registerString:function(t){return t?"Sign In":"Register"},_googleString:function(t){return t?"Log Out":"Sign in with Google"},_facebookString:function(t){return t?"Log Out":"Sign in with Facebook"},_errorClass:function(t){return t?"trans2":"trans"},_submissionClass:function(t){return t?"":"trans"},_submitClass:function(t){var i="";return t&&"password"==t.provider&&(i="trans3"),i},_facebooClass:function(t){var i="sign-in";return t&&t.facebook&&(i="trans sign-in"),i},_emailpassClass:function(t){return t?"vertical layout trans2":"vertical layout"},_socialStyle:function(t){return t?"opacity:0;":"opacity:1;"},_googleStyle:function(t){var i="opacity:1;";return t&&(t.google||(i="opacity:0;")),i},_facebookStyle:function(t){var i="opacity:1;";return t&&(t.facebook||(i="opacity:0;")),i},_emailpassStyle:function(t){var i="opacity:1;";return t&&"password"!=t.provider&&(i="opacity:0;"),i},_passagainStyle:function(t){return t?"opacity:1;":"opacity:0;"},doerror:function(t){this.$.backdrop.style.display="none",this.$.errory.style.display="block";var i=String(t.detail).split(": ")[1];this.$.errory.innerHTML=i}});</script>
+</dom-module></body></html>

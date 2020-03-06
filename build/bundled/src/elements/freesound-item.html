@@ -1,0 +1,38 @@
+<html><head><link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+
+</head><body><dom-module id="freesound-item">
+
+  <template>
+
+    <style>
+      :host {
+      }    
+      #pad{
+        padding:4px;
+        width:270px;
+        height:40px;
+        border-bottom:1px solid #bbb;
+      }
+      #pad:hover{
+
+      }
+
+
+    </style>
+
+    <iron-ajax id="ajax" auto="" url="{{computeUrl(sound)}}" handle-as="arraybuffer" last-response="{{res}}"></iron-ajax>
+
+    <div id="pad" class="horizontal layout center justified">
+      <div>
+        <paper-icon-button icon="av:play-arrow" on-tap="play" disabled="{{dis}}" id="playfs"></paper-icon-button>
+        {{name}}
+      </div>
+      <paper-icon-button icon="file-download" on-tap="download" disabled="{{dis}}" id="loadfs">
+    </paper-icon-button></div>
+
+  </template>
+  <script>Polymer({is:"freesound-item",properties:{sound:{type:Object,observer:"soundChange"},res:{observer:"resChange"}},ready:function(){this.urlyo=null,this.dis=!0},computeUrl:function(e){return e.previews["preview-hq-mp3"]},soundChange:function(){this.dis=!0;var e=this.sound.name.split(".")[0];this.name=e.substring(0,20)},resChange:function(){var e=this;Audiocontext.decodeAudioData(e.res,function(i){return i?void(loadedBufferArray[e.sound.id]=i):void alert("error decoding file data")},function(e){console.log("errorrr,",e)}),this.dis=!1},play:function(){playLoadedSound(loadedBufferArray[this.sound.id])},download:function(){this.fire("load",{id:this.sound.id,name:this.name,url:this.sound.previews["preview-hq-mp3"]})}});</script>
+</dom-module>
+</body></html>

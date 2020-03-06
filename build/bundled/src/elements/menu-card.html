@@ -1,0 +1,25 @@
+<html><head><link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+</head><body><dom-module id="menu-card">
+<style>
+	iron-icon {
+		margin-right: 9px;
+	}
+  </style>
+
+<template>
+
+<paper-menu id="mainmenu" class="list" selected="5" on-iron-select="menuSelect">
+	<paper-item id="login_item"><iron-icon icon="account-circle"></iron-icon>{{login}}</paper-item>
+	<paper-item id="load_item"><iron-icon icon="exit-to-app"></iron-icon>Beats</paper-item>
+	<paper-item id="save_item"><iron-icon icon="save"></iron-icon>Save</paper-item>
+	<paper-item id="sounds_item"><iron-icon icon="cloud-download"></iron-icon>Sounds</paper-item>
+</paper-menu>
+
+
+</template>
+
+
+<script>Polymer({is:"menu-card",properties:{login:{type:String}},menuSelect:function(){var e=this.$.mainmenu.selected+2;"You"==this.login&&4==e&&(e=2),Main.tabs.selected=e,Main.tabs2.selected=e,Main.pages.select(e),let_scroll()}});</script>
+</dom-module></body></html>

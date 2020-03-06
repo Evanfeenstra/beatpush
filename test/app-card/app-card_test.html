@@ -1,0 +1,32 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>app-card test</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../../src/app-card/app-card.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+        <app-card></app-card>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('app-card', function() {
+
+        test('instantiating the element works', function() {
+          var element = fixture('basic');
+          assert.equal(element.is, 'app-card');
+        });
+
+      });
+    </script>
+  </body>
+</html>

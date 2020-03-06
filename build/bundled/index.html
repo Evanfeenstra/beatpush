@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="description" content="Create awesome music online with BeatPush! Drag and drop sequencer and lots of cool effects from pitch-shifting to a customizable LFO. Import your own samples, and share your beats with friends!">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,user-scalable=no">
+  <meta name="generator" content="BeatPush">
+  <title>BeatPush - Online Music Production</title>
+
+  
+  <link rel="shortcut icon" href="favicon.ico">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BeatPush">
+  <meta property="og:description" content="Create your own music online!">
+  <meta property="og:site_name" content="BeatPush">
+  <meta property="og:url" content="https://beatpush.com/">
+  <meta property="og:image" content="https://beatpush.com/images/ogimg.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="BeatPush">
+  <meta property="twitter:description" content="Create your own music online!">
+  <meta property="twitter:image" content="https://beatpush.com/images/ogimg.jpg">
+
+  
+  <meta name="theme-color" content="#303F9F">
+
+  
+  <link rel="manifest" href="/manifest.json">
+
+  
+  <meta name="msapplication-TileColor" content="#3372DF">
+
+  
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="BeatPush">
+  <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="BeatPush">
+  <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png">
+
+  
+  <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/flex.css">
+
+
+  <script>window.twttr=function(t,e,r){var n,i=t.getElementsByTagName(e)[0],w=window.twttr||{};return t.getElementById(r)?w:(n=t.createElement(e),n.id=r,n.src="https://platform.twitter.com/widgets.js",i.parentNode.insertBefore(n,i),w._e=[],w.ready=function(t){w._e.push(t)},w)}(document,"script","twitter-wjs");</script>
+
+  <link rel="import" href="src/elements/app-card.html">
+  <link rel="import" href="src/bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="src/bower_components/paper-dialog/paper-dialog.html">
+
+</head>
+
+<body unresolved="" class="fullbleed layout vertical">
+  <template is="dom-bind" id="app">
+
+    <div id="loader">
+      <div class="loaderrow">
+        <div class="loadersquare" style="background-color: #5C6BC0"></div><div class="loadersquare" style="background-color: #FF9800"></div><div class="loadersquare" style="background-color: #4CAF50"></div>
+      </div>
+      <div class="loaderrow">
+        <div class="loadersquare" style="background-color: #2196F3"></div><div class="loadersquare" id="loadermiddle" style="background-color: #99a">
+          <img src="images/spinner128.gif" height="50px" width="50px">
+        </div><div class="loadersquare" style="background-color: #9EE003"></div>
+      </div>
+      <div class="loaderrow">
+        <div class="loadersquare" style="background-color: #AB47BC"></div><div class="loadersquare" style="background-color: #EF5350"></div><div class="loadersquare" style="background-color: #8D6E63"></div>
+      </div>
+    </div>
+
+    <img id="handsvg" src="/images/indexfinger.svg">
+
+    <div id="tourer">
+      <div id="tourtop"></div>
+      <div id="tourfoot" class="borderblink">
+        <div id="tourtext"></div>
+        <div id="tourbuttons">
+          <paper-icon-button id="tourexit" class="big" icon="close" on-tap="tourexit"></paper-icon-button>
+          <paper-icon-button id="tournext" class="big" icon="arrow-forward" on-tap="tournext"></paper-icon-button>
+        </div>
+      </div>
+    </div>
+
+    <paper-dialog style="min-width:240px" entry-animation="scale-up-animation" exit-animation="fade-out-animation" id="introdialog" modal="true">
+      <h2>Welcome to BeatPush!</h2>
+      <h4>The online music production app</h4>
+      <div class="az" style="text-align: center">
+      
+        <button class="socialbtnyo btn" id="taketour" onclick="unmute_ios(bufferLoader.bufferList);" on-tap="taketour">Take the Tour</button><br>
+      
+        <button class="socialbtnyo btn" id="getstarted" onclick="unmute_ios(bufferLoader.bufferList);" on-tap="getstarted">
+          Get Started
+        </button>
+      </div>
+    </paper-dialog>
+
+    <app-card id="appcard"></app-card>
+
+  </template>
+
+  <script>!function(){if("registerElement"in document&&"import"in document.createElement("link")&&"content"in document.createElement("template"));else{var e=document.createElement("script");e.src="/src/bower_components/webcomponentsjs/webcomponents-lite.min.js",document.body.appendChild(e)}}();</script>
+
+  <script src="scripts/buffer-loader.js"></script>
+  <script src="scripts/sound.js"></script>
+  <script src="scripts/synth.js"></script>
+  <script src="scripts/tour.js"></script>
+  <script src="scripts/app.js"></script>
+
+  <script src="scripts/beatcard.js"></script>
+  
+  
+
+
+</body></html>

@@ -1,0 +1,546 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/firebase-element/firebase-auth.html">
+
+
+<dom-module id="login-card">
+<style>
+	iron-icon {
+		margin-right: 9px;
+	}
+
+	.sign-in {
+    display: inline-block;
+    color: white;
+    width: 290px;
+    border-radius: 5px;
+    white-space: nowrap;
+    margin:8px 0;
+    transition: all 300ms ease-in;
+    -webkit-transition: all 300ms ease-in;
+    text-align:left;
+    padding:0;
+    text-transform: none !important;
+  }
+
+  #goog{
+    background: rgb(214,65,54);
+  }
+
+  #faceboo{
+    background: rgb(75,110,170);
+  }
+
+  .sign-in:hover {
+    cursor: pointer;
+  }
+
+  .google-sign-in-icon {
+    background: url('/images/google.png') transparent 5px 50% no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    width: 42px;
+    height: 42px;
+    border-right: gray 1px solid;
+  }
+
+  .facebook-sign-in-icon {
+    background: url('/images/facebook.png') transparent 5px 50% no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    width: 42px;
+    height: 42px;
+    border-right: gray 1px solid;
+  }
+
+  .sign-in-label {
+    font-size: 14px;
+    width:100%;
+    /* Use the Roboto font that is loaded in the <head> */
+    font-family: 'Roboto', sans-serif;
+  }
+
+
+	.mid{
+	  text-align: center;
+	  display: inline-block;
+	  width:200px;
+	}
+
+	.trans{
+	  transform: translateY(-58px);
+	  -webkit-transform: translateY(-58px);
+	}
+	.trans2{
+	  transform: translateY(-116px);
+	  -webkit-transform: translateY(-116px);
+	}
+	.trans3{
+	  transform: translateY(-278px);
+	  -webkit-transform: translateY(-278px);
+	}
+
+
+	#emailpass{
+	  text-align: center;
+	  width:300px;
+	  margin-top:14px;
+	  transition: all 300ms ease-in;
+	  -webkit-transition: all 300ms ease-in;
+	}
+
+	#submit {
+	  color: #fff;
+	  background-color: #26a69a;
+	  text-align: center;
+	  letter-spacing: .5px;
+	  cursor: pointer; 
+	  border: none;
+	  border-radius: 2px;
+	  display: inline-block;
+	  height: 36px;
+	  line-height: 36px;
+	  outline: 0;
+	  padding: 0 2rem;
+	  vertical-align: middle;
+	  margin-top:19px;
+	  text-transform: none !important;
+	  transition: all 300ms ease-in;
+	  -webkit-transition: all 300ms ease-in;
+	}
+
+	#submit:hover {
+	    background-color: #2bbbad; }
+
+
+	#noaccount{
+	  margin-top: 16px;
+	  display: inline-block;
+	}
+	#register{
+	  text-decoration: underline;
+	  text-transform: none !important;
+	  color:#1bab9d;
+	  display: inline-block;
+	  margin-bottom: 19px;
+	  cursor: pointer;
+	}
+	#register:hover{
+	  color:#0b9b8d;
+
+	}
+
+	#submission{
+	    transition: all 300ms ease-in;
+	    -webkit-transition: all 300ms ease-in;
+	}
+
+	#passagain{
+	  opacity: 0;
+	  transition: opacity 300ms ease-in;
+	  -webkit-transition: opacity 300ms ease-in;
+	}
+
+	#social{
+	  transition: opacity 300ms ease-in;
+	  -webkit-transition: opacity 300ms ease-in;
+	}
+
+	#inputs{
+	  transition: opacity 300ms ease-in;
+	  -webkit-transition: opacity 300ms ease-in;
+	}
+
+	#errory{
+	  transition: all 300ms ease-in;
+	  -webkit-transition: all 300ms ease-in;
+	}
+
+	#noaccount{
+	  transition: opacity 300ms ease-in;
+	  -webkit-transition: opacity 300ms ease-in;
+	  margin-top:8px !important;
+	}
+
+	#backdrop{
+		position: absolute;
+		top:-50px;
+		bottom: 0;
+		left:0;
+		right:0;
+		height:490px;
+		background: radial-gradient(rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.3) 6%,transparent 60%); /* Standard syntax */
+		text-align: center;
+	}
+
+	#errory{
+		background-color:rgba(255,0,0,0.5);
+		padding:10px 10px;
+		text-align: center;
+		width:260px;
+		color:white;
+		font-family: 'Roboto', sans-serif;
+    	font-size: 14px;
+    	-webkit-font-smoothing: antialiased;
+	}
+  </style>
+
+<template>
+
+    <firebase-auth id="auth"
+                   location="https://beatpush.firebaseio.com"
+                   provider="[[provider]]"
+                   user="{{user}}"
+                   on-error="doerror"
+                   on-user-created="userCreated"
+                    >
+    </firebase-auth>
+
+	<div id="social" class="vertical layout" style$="[[_socialStyle(createAccount)]]">
+    <paper-button class="sign-in" id="goog"
+     tabindex="0"
+     on-tap="signGoogle" disabled="[[disableG(user,createAccount)]]" style$="[[_googleStyle(user)]]">
+      <span class="google-sign-in-icon"></span>
+      <div class="mid"><span class="sign-in-label">[[_googleString(user)]]</span></div>
+    </paper-button>
+
+    <paper-button id="faceboo"
+     tabindex="1"
+     on-tap="signFacebook" disabled="[[disableF(user,createAccount)]]" class$="[[_facebooClass(user)]]" style$="[[_facebookStyle(user)]]">
+      <span class="facebook-sign-in-icon"></span>
+      <div class="mid"><span class="sign-in-label">[[_facebookString(user)]]</span></div>
+    </paper-button>
+    </div>
+
+    <div id="emailpass" class$="[[_emailpassClass(createAccount)]]" style$="[[_emailpassStyle(user)]]">
+      <div id="inputs">
+        <strong>[[_OrString(createAccount)]]</strong>
+        <paper-input autofocus id="email" label="Email:" disabled="[[disabler(user)]]" on-keypress="_enter" ></paper-input>
+        <paper-input id="password" label="Password:" disabled="[[disabler(user)]]" on-keypress="_enter"></paper-input>
+        <paper-input id="passagain" label="Password again:" disabled="[[disabler(user)]]" style$="[[_passagainStyle(createAccount)]]" on-keypress="_enter"></paper-input>
+      </div>
+      <div id="submission" class$="[[_submissionClass(createAccount)]]">
+        <paper-button id="submit" on-tap="submit" disabled="[[disableP(user)]]" class$="[[_submitClass(user)]]">[[_Submit(user,createAccount)]]</paper-button>
+        <div id="noaccount">[[_accountString(createAccount)]]<paper-button on-tap="register" id="register" disabled="[[disabler(user)]]">[[_registerString(createAccount)]]</paper-button></div>
+      </div>
+    </div>
+
+    <div id="errory" class$="[[_errorClass(createAccount)]]"></div>
+
+    <div id="backdrop"><img src="../images/spinner128.gif" height="50px" width="50px" style="margin-top:215px"/></div>
+
+</template>
+
+
+<script>
+Polymer({
+
+  is: 'login-card',
+
+  properties: {
+
+  	user: {
+      type: Object,
+      observer: 'userChange',
+    },
+
+    userName: {
+    	type:String,
+    	notify:true
+    },
+
+    uid: {
+      type: String,
+      notify: true
+    }
+
+  },
+
+  // If enter was pressed
+      _enter: function(e) {
+        if (e.keyCode === 13) {
+          e.preventDefault();
+          this.submit();
+        }
+      },
+
+  userChange: function() {
+    //console.log("User: ",this.user)
+  	this.$.backdrop.style.display="none"
+  	this.$.errory.style.display="none"
+  	this.createAccount=false;
+        if(this.user){
+          this.uid = this.user.uid
+          //console.log("user: ",this.user)
+          if(this.user.google) { //login google
+            this.userName = this.user.google.displayName;
+          }
+          else if(this.user.facebook) { //login FB
+            this.userName = this.user.facebook.displayName;
+          }
+          else if(this.user.provider=='password') { //login w password
+            this.userName=this.user.password.email.split('@')[0]
+            this.$.inputs.style.opacity=0.0;
+            this.$.noaccount.style.opacity=0.0;
+          }
+        }
+        else{ //logout
+          this.userName='You'
+          this.uid=null;
+	        this.$.inputs.style.opacity=1.0;
+	        this.$.noaccount.style.opacity=1.0;          
+        }
+      },
+
+      ready: function() {
+      	this.$.backdrop.style.display="none"
+      	this.$.errory.style.display="none"
+        this.userName='You'
+        this.createAccount=false;
+      },
+
+      signOut: function() {
+        this.$.auth.logout();
+      },
+
+      signGoogle: function() {
+      	this.$.backdrop.style.display="block"
+        this.async(function() {
+          this.$.backdrop.style.display="none"
+        },9000)
+        if(this.user) {
+          this.$.auth.logout();
+        }
+        else{
+          this.provider="google"
+          this.$.auth.login();
+        }
+      },
+
+      signFacebook: function() {
+      	this.$.backdrop.style.display="block"
+        this.async(function() {
+          this.$.backdrop.style.display="none"
+        },9000)
+        if(this.user) {
+          this.$.auth.logout();
+        }
+        else{
+          this.provider="facebook"
+          this.$.auth.login();
+        }
+      },
+
+      submit: function() {
+        if(this.user) {
+          this.$.backdrop.style.display="block"
+          this.async(function() {
+            this.$.backdrop.style.display="none"
+          },9000)
+          this.$.auth.logout();
+        }
+        else{
+          if(this.$.email.value && this.$.password.value) {
+          	this.$.backdrop.style.display="block"
+            this.async(function() {
+              this.$.backdrop.style.display="none"
+            },9000)
+	          if(!this.createAccount){
+	            this.provider="password"
+	            this.$.auth.login({"email":this.$.email.value,"password":this.$.password.value});
+	          }
+	          else{
+	            this.provider="password"
+	            var pass=this.$.password.value;
+	            var pass2=this.$.passagain.value;
+	            if(pass==pass2){
+	              this.$.auth.createUser(this.$.email.value,pass);
+	            }
+	            else{
+	            	this.doerror({detail:'Error: Passwords do not match'})
+	            }
+	          }
+          }
+        }
+      },
+
+      userCreated: function(e) {
+        this.$.auth.login({"email":this.$.email.value,"password":this.$.password.value});
+      },
+
+      register: function() {
+      	this.$.errory.style.display="none"
+        if(!this.createAccount){
+          this.createAccount=true;
+        }
+        else{
+          this.createAccount=false;
+        }
+      },
+
+
+
+      /*COMPUTED FUNCTIONS*/
+
+      disabler: function(user) {
+      	return user ? true : false
+      },
+
+      disableP: function(user) {
+      	var a=false;
+      	if(user){
+      		a = true
+      		if(user.provider=='password'){
+      			a=false
+      		}
+      	}
+      	return a
+      },
+
+      disableG: function(user,createAccount) {
+      	var a=false;
+      	if(createAccount) {
+      		a=true
+      	}
+      	else if(user){
+      		a = true
+      		if(user.google){
+      			a=false
+      		}
+      	}
+      	return a
+      },
+
+      disableF: function(user,createAccount) {
+      	var a=false;
+      	if(createAccount) {
+      		a=true
+      	}
+      	else if(user){
+      		a = true
+      		if(user.facebook){
+      			a=false
+      		}
+      	}
+      	return a
+      },
+
+      _Submit: function(user,createAccount){
+      	var a="Log In"
+      	if(!user){	
+      		if(createAccount){
+      			a="Register"
+      		}
+      	}
+      	else{
+      		a="Log Out"
+      		
+      	}
+      	return a
+      },
+
+      _OrString: function(createAccount) {
+      	return createAccount ? "Create Account": "Or"
+      },
+
+      _accountString: function(createAccount) {
+      	return createAccount ? "Already have an account?": "Don't have an account yet?"
+      },
+
+      _registerString: function(createAccount) {
+      	return createAccount ? "Sign In": "Register"
+      },
+
+      _googleString: function(user) {
+      	return user ? "Log Out": "Sign in with Google"
+      },
+
+      _facebookString: function(user) {
+      	return user ? "Log Out": "Sign in with Facebook"
+      },
+
+      _errorClass: function(createAccount) {
+      	return createAccount ? "trans2" : "trans"
+      },
+
+      _submissionClass: function(createAccount) {
+		return createAccount ? "": "trans"
+      },
+
+      _submitClass: function(user) {
+      	var a=""
+      	if(user){
+      		if(user.provider=="password"){
+      			a="trans3"
+      		}
+      	}
+      	return a
+      },
+
+      _facebooClass: function(user) {
+      	var a="sign-in";
+      	if(user){
+      		if(user.facebook){
+      			a="trans sign-in"
+      		}
+      	}
+      	return a
+      },
+
+      _emailpassClass: function(createAccount) {
+      	return createAccount ? "vertical layout trans2": "vertical layout";
+      },
+
+      _socialStyle: function(createAccount) {
+      	return createAccount ? "opacity:0;": "opacity:1;";
+      },
+
+      _googleStyle: function(user) {
+      	var a="opacity:1;"
+      	if(user) {
+      		if(!user.google){
+      			a="opacity:0;"
+      		}
+      	}
+      	return a
+      },
+
+      _facebookStyle: function(user) {
+      	var a="opacity:1;"
+      	if(user) {
+      		if(!user.facebook){
+      			a="opacity:0;"
+      		}
+      	}
+      	return a
+      },
+
+      _emailpassStyle: function(user) {
+      	var a="opacity:1;"
+      	if(user){
+      		if(user.provider!='password'){
+      			a="opacity:0;"
+      		}
+      	}
+      	return a
+      },
+
+      _passagainStyle: function(createAccount) {
+      	return createAccount ? "opacity:1;": "opacity:0;";
+      },
+
+
+      doerror: function(e) {
+      	this.$.backdrop.style.display="none"
+      	//console.log('error: ',String(e.detail))
+      	this.$.errory.style.display="block"
+      	var message =String(e.detail).split(": ")[1]
+      	this.$.errory.innerHTML=message
+      }
+
+
+
+  
+
+});
+</script>
+</dom-module>

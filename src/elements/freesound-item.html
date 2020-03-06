@@ -1,0 +1,107 @@
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+
+<dom-module id="freesound-item">
+
+  <template>
+
+    <style>
+      :host {
+      }    
+      #pad{
+        padding:4px;
+        width:270px;
+        height:40px;
+        border-bottom:1px solid #bbb;
+      }
+      #pad:hover{
+
+      }
+
+
+    </style>
+
+    <iron-ajax id="ajax"
+      auto
+      url="{{computeUrl(sound)}}"
+      handle-as="arraybuffer"
+      last-response="{{res}}"
+    ></iron-ajax>
+
+    <div id="pad" class="horizontal layout center justified">
+      <div>
+        <paper-icon-button icon="av:play-arrow" on-tap="play" disabled="{{dis}}" id="playfs"></paper-icon-button>
+        {{name}}
+      </div>
+      <paper-icon-button icon="file-download" on-tap="download" disabled="{{dis}}" id="loadfs">
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+
+      is: 'freesound-item',
+
+      properties: {
+
+        sound:{
+          type: Object,
+          observer: "soundChange"
+        },
+
+        res: {
+          observer: "resChange"
+        }
+      },
+
+
+      ready: function() {
+        this.urlyo=null
+        this.dis=true
+        
+      },
+
+      computeUrl: function(sound) {
+        return sound.previews['preview-hq-mp3']
+        /*var s = sound.previews['preview-hq-mp3']
+        return "https" + s.substring(5,s.length)*/
+      },
+
+      soundChange: function() {
+        this.dis=true
+        var namey=this.sound.name.split(".")[0]
+        this.name = namey.substring(0,20);
+      },
+
+      resChange: function() {
+        var that = this;
+        Audiocontext.decodeAudioData(
+          that.res,
+          function(buffer) {
+                    // success callback, the argument is the audio buffer
+                    if (!buffer) {
+                        alert('error decoding file data');
+                        return;
+                    }
+                    loadedBufferArray[that.sound.id] = buffer;
+                },
+                function(error) { //error callback
+                    console.log('errorrr,', error)
+                }
+        );//end decodeAudioData
+        this.dis = false
+      },
+
+      play: function() {
+        playLoadedSound(loadedBufferArray[this.sound.id])
+      },
+
+      download: function() {
+        this.fire("load",{"id":this.sound.id,"name":this.name,"url":this.sound.previews['preview-hq-mp3']})
+      }
+
+    });
+  </script>
+</dom-module>

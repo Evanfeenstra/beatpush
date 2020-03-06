@@ -1,0 +1,12 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/elements/app-card.html",
+  "sources": [
+  	"src/**/*",
+    "images/**/*",
+    "beats/**/*",
+    "scripts/**/*",
+    "styles/**/*",
+    "bower.json"
+  ]
+}

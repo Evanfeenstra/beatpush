@@ -1,0 +1,1758 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="synth-card">
+
+  <style>
+
+    :host {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      font-size: 2em;
+      font-weight: 300;
+      background-color: #E5E5E5;
+    }
+    paper-tab{
+      --paper-tab-content-unselected: {
+        min-height: 0;
+        min-width: 0;
+      };
+      --paper-tab-content: {
+        min-height: 0;
+        min-width: 0;
+      };
+    }
+    ul {
+      padding: 0;
+      list-style-type: none;
+      margin: 0 0;
+    }
+    paper-slider{
+      max-width:91%;
+    }
+    #synth_container {
+      height: 100% !important;
+      width: 100%;
+    }
+    .hundo {
+    	width: 100%;
+    	height: 100% !important;
+    }
+    .synthy_container {
+      background-color: rgba(168,168,168,0.4);
+      width:100%;
+      height: 100% !important;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none; 
+      -moz-user-select: none; 
+      -ms-user-select: none; 
+      -o-user-select: none; 
+      user-select: none;
+    }
+    #innertabsS{
+     background-color: rgba(34,34,34,0.65);
+     /*height: 1.75rem;
+     width: 14rem;*/
+     width: 100%;
+     color: white;
+     font-size: .5em;
+     height: 15%;
+   }
+
+   #tabsamplesS {
+   	height: 100%;
+   	background-color: rgba(255, 255, 255, 0.8);
+   }
+   .vtab{
+   	outline: 1pt solid rgba(0,0,0,0.4);
+   	font-size:1em;
+   }
+   /*paper-vertical-tabs.vert::shadow #selectionBar {
+   	position: relative;
+   	z-index: 1;
+   	opacity: 1;
+   }
+   paper-tab.vtab::shadow .tab-content {
+   	margin:34%;
+   }*/
+   .spanny {
+    font-size: 0.5em;
+    padding: 0 10% 0 6%;
+    min-height: 0;
+  }
+ .fx .spanny {
+  height: 0px;
+  }
+  .sliders{
+    padding: 13% 10px 7px 10px;
+  }
+  .fx{
+    padding: 2px 8px 2px 8px;
+    width: 78%;
+  }
+  .downlabel {
+  	max-width: 40%;
+  }
+  .dropdwn {
+    margin: 0px 0px;
+    -moz-appearance: none;
+    -webkit-appearance: none; 
+    appearance: none;
+    border-radius: 0px;
+    font-family: 'RobotoDraft', sans-serif;
+    font-size: 1em;
+    background-color: rgba(34,34,34,0.0);
+    border: 0px;
+    border-bottom: 1px solid #777;
+    padding-right:20%;
+    max-width: 100%;
+    overflow:hidden;
+    cursor: pointer; cursor: hand;
+  }
+  label {position:relative}
+  label:after {
+    content:'>';
+    font:1em 'RobotoDraft', monospace;
+    color:#777;
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform:rotate(90deg);
+    right:0px;
+    position:absolute;
+    pointer-events:none;
+  }
+  #sample_dropdwnS {
+    margin-bottom: 8%;
+  }
+  #xy_bounderS {
+  	border: 5px solid;
+  	border-color: rgb(92, 107, 192);
+  	border-radius: 5px;
+ 	  margin: 5% 0 4% 0;
+ 	  height: 100%;
+    min-height: 0;
+  }
+  #xyS {
+    position: relative;
+  	border: 1px solid;
+  	border-color: rgb(92, 107, 192);
+  	background-color: rgba(34,34,34,0.4);
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    margin:0px;
+    overflow: hidden;
+  }
+  #xyS::shadow .button-content {
+    padding: 0;
+  }
+  .modsvg{
+    position: absolute;
+    /*margin-left: -50%;*/
+    top:0px;
+    left:0px;
+  }
+  #playline{
+  	transition: margin-left .5s;
+  }
+  #lfosvg {
+  	display: block;
+  }
+  #arpsvg {
+  	display: none;
+  }
+  #ahsvg {
+  	display: none;
+  }
+  #adsrsvg {
+    display: none;
+  }
+  #thingS {
+    /*top: 106px;*/
+    position: absolute;
+    transition: left .2s ease-in, top .2s ease-in;
+    height: 10px;
+    width: 10px;
+    border: 5px solid;
+    border-color: rgb(92, 107, 192);
+    border-radius: 10px;
+    background-color: whitesmoke;
+  }
+  #fx_svg1S {
+  	width:10%; 
+    min-width: 10px;
+  	height:100%;
+  }
+  #fx_svg2S {
+  	width: 20%;
+    min-width: 20px;
+  	height: 100%;
+  }
+
+  /*paper-slider::shadow #sliderContainer {
+      height: 36px;
+      width: 75%;
+    }
+    paper-slider::shadow #sliderBar {
+      padding: 8px 0px;
+      color: rgba(255,255,255,1) !important;
+    }
+    paper-slider::shadow #sliderKnob {
+      height: 32px;
+    }*/
+
+  #synth_row_1 {
+    width: 80%;
+    margin: auto;
+    /*background-color: #ccc;*/
+  }
+  #synth_row_3 {
+    width: 80%;
+    margin: auto;
+    /*background-color: #ccc;*/
+  }
+  #synth_row_2 {
+    /*background-color: #ccc;*/
+  }
+  #synth_row_4 {
+    /*background-color: #ccc;*/
+  }
+  .sS{
+  	background-color: #bbc;
+  	border: 1px solid #ccc;
+  	opacity: 0.6;
+  	cursor: default;
+  	box-shadow: 2px 2px 10px #444;
+    border-radius: 50%;
+    margin:0;
+    padding:0;
+    min-height: 0;
+    min-width: 0;
+  }
+  paper-button.s::shadow .button-content {
+    display: none;
+  }
+  .box {
+    overflow: hidden;
+    border-radius: 0;
+    font-size: .75rem;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    margin:1px;
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.4);
+  }
+  #synth_central_container{
+    /*background: radial-gradient(#222,#eee);*/ 
+    -webkit-touch-callout: none;
+      -webkit-user-select: none; 
+      -moz-user-select: none; 
+      -ms-user-select: none; 
+      -o-user-select: none; 
+      user-select: none;
+  }
+  #middle_containerS {
+  	margin:10%;
+  	height: 100%;
+  }
+  drag-avatar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: block;
+    pointer-events: none;
+  }
+  paper-button {
+    min-width: 1em;
+  }
+  .svgmargin{
+    margin:5px;
+    min-height:1.3rem;
+    min-width:.66rem;
+  }
+  .octavia{
+    padding:0;
+    margin:7px;
+  }
+
+  #modspanny1S{
+    margin:5% 0 0 0;
+   }
+   #modspanny2S{
+    margin:-.7% 0 2% 0; 
+    padding-right:12px;
+   }
+  /*PHONES*/
+  @media (max-width: 399px), (max-height: 399px) {
+     /*paper-slider::shadow #sliderContainer {
+      height: 10px;
+      width: 55%;
+      margin: -12% 0 2% 0;
+    }
+    paper-slider::shadow #sliderBar {
+      padding: 0px;
+    }
+    paper-slider::shadow #sliderKnob {
+      height: 16px;
+    }
+    .sliders{
+      padding: 6px 10px 7px 10px;
+    }*/
+    #innertabsS{
+     font-size: .3em;
+   }
+   .spanny {
+    font-size: .4em;
+  }
+  .vtab{
+    font-size:.7em;
+    padding:3px;
+   }
+   .svgmargin{
+    margin:5px;
+    min-height:1rem;
+    min-width:.66rem;
+   }
+   #modspanny1S{
+    margin: 2% 0 2% 0;
+   }
+   #modspanny2S{
+    margin: -2.7% 0 2% 0;
+   }
+
+  }
+
+
+
+
+  
+</style>
+
+
+<template>
+  <div class="vertical layout" id="synth_container">
+
+
+
+
+    <ul class="flex-1 layout horizontal" id="synth_row_1" >
+      <paper-button id="a2" class="sS flex" on-tap="show_spot"></paper-button>
+      <paper-button id="b2" class="sS flex" on-tap="show_spot"></paper-button>
+      <paper-button id="c2" class="sS flex" on-tap="show_spot"></paper-button>
+      <paper-button id="d2" class="sS flex" on-tap="show_spot"></paper-button>
+      <paper-button id="e2" class="sS flex" on-tap="show_spot"></paper-button>
+      <paper-button id="f2" class="sS flex" on-tap="show_spot"></paper-button>
+      <paper-button id="g2" class="sS flex" on-tap="show_spot"></paper-button>
+      <paper-button id="h2" class="sS flex" on-tap="show_spot"></paper-button>
+    </ul>
+    <div class="layout horizontal flex-8" id="synth_inner_container">
+      <ul class="flex-1 layout vertical-reverse" id="synth_row_4" >
+        <paper-button id="y2" class="sS flex" on-tap="show_spot"></paper-button>
+        <paper-button id="z2" class="sS flex" on-tap="show_spot"></paper-button>
+        <paper-button id="za2" class="sS flex" on-tap="show_spot"></paper-button>
+        <paper-button id="zb2" class="sS flex" on-tap="show_spot"></paper-button>
+        <paper-button id="zc2" class="sS flex" on-tap="show_spot"></paper-button>
+        <paper-button id="zd2" class="sS flex" on-tap="show_spot"></paper-button>
+        <paper-button id="ze2" class="sS flex" on-tap="show_spot"></paper-button>
+        <paper-button id="zf2" class="sS flex" on-tap="show_spot"></paper-button>
+      </ul>
+      <div class="layout center flex-8" id="synth_central_container">
+
+
+        <div class="vertical layout center" id="middle_containerS">
+	        <paper-tabs class="horizontal layout" id="innertabsS" selected="0">
+	          <paper-tab class="flex" name="0" id="notetab">Note</paper-tab>
+	          <paper-tab class="flex" name="1" id="fxtabS">FX</paper-tab>
+	          <paper-tab class="flex" name="2" id="modtabS">Mod</paper-tab>
+            
+	        </paper-tabs>
+
+          <neon-animated-pages id="innerpagesS" style="height:85%;width:100%;" selected="0" entry-animation="fade-in-animation" exit-animation="scale-down-animation">
+
+	        <neon-animatable class='hundo flex'>
+	          <div class="flex vertical layout synthy_container" unselectable='on' onselectstart='return false;' touch-action="none">
+	            <div class="flex horizontal layout">
+	              <paper-button class="box flex" style="background-color: #FB3F00;" on-track="handleTrack" on-up="stop_note" on-down="play_note1" onmousedown='return false;' on-trackend="dragEnd" id="firstboxS">tone</paper-button>
+	              <paper-button class="flex box" style="background-color: #0389F4;" on-track="handleTrack" on-up="stop_note" on-down="play_note2" on-trackend="dragEnd">2nd</paper-button>
+	              <paper-button class="flex box" style="background-color: #E26489;" on-track="handleTrack" on-up="stop_note" on-down="play_note3" on-trackend="dragEnd">3rd</paper-button>
+	            </div>
+	            <div class="flex horizontal layout">
+	              <paper-button class="flex box" style="background-color: #669922;" on-track="handleTrack" on-up="stop_note" on-down="play_note4" on-trackend="dragEnd" id="fourthboxS">4th</paper-button>
+	              <paper-button class="flex box" style="background-color: #bbc;" on-track="handleTrack">erase</paper-button>
+	              <paper-button class="flex box" style="background-color: #00B2A2;" on-track="handleTrack" on-up="stop_note" on-down="play_note5" on-trackend="dragEnd">5th</paper-button>
+	            </div>
+	            <div class="flex horizontal layout">
+	              <paper-button class="flex box" style="background-color: #D29715;" on-track="handleTrack" on-up="stop_note" on-down="play_note6" on-trackend="dragEnd">6th</paper-button>
+	              <paper-button class="flex box" style="background-color: #947CFF;" on-track="handleTrack" on-up="stop_note" on-down="play_note7" on-trackend="dragEnd">7th</paper-button>
+	              <paper-button class="flex box" style="background-color: #FFE81C;" on-track="handleTrack" on-up="stop_note" on-down="play_note8" on-trackend="dragEnd">octave</paper-button>
+	            </div>
+	          </div>
+	        </neon-animatable>
+        
+
+        <neon-animatable class='hundo flex'>
+          <div class="vertical layout synthy_container">
+          <div class="flex vertical layout around-justified sliders">
+
+          <div class="flex" style="min-height:0;">
+           <div class="horizontal layout justified spanny"><span style="white-space: nowrap;">Reverb: <b>{{reverb_setting}}</b></span>
+            <label class="downlabel"><select id='reverbselectS' class="dropdwn" onchange="reverbdropChangeS(this.selectedIndex);">
+             <option>digital short</option>
+             <option>digital long</option>
+             <option>church</option>
+             <option>factory</option>
+             <option>hall</option>
+             <option>spring</option>
+             <option>bucket</option>
+             <option>djembe</option>
+             <option>echo</option>
+             <option>pot</option>
+             <option>telephone</option>
+             <option>vacuum</option>
+            </select></label>
+           </div>
+         <paper-slider pin value="30" on-immediate-value-change="REchange" on-value-change="REchange" id="verbsliderS"></paper-slider>
+         </div>
+      
+          <div class="flex" style="min-height:0;">
+             <div class="horizontal layout justified spanny"><span style="white-space: nowrap;">Filter: <b>{{filter_cutoff}}</b></span>
+              <label class="downlabel"><select class="dropdwn" onchange="filterdropChangeS(this.selectedIndex);">
+               <option selected>lowpass</option>
+               <option>lowpass, Q</option>
+               <option>lowpass, high Q</option>
+              </select></label>
+           	</div>
+         <paper-slider pin value="45" on-immediate-value-change="FCchange" on-value-change="FCchange" id="fsliderS"></paper-slider>
+         </div>
+        
+        	<div class="flex" style="min-height:0;">
+             <div class="horizontal layout justified spanny"><span style="white-space: nowrap;">Scale: <b>{{scale_setting_letters}}</b></span>
+               <label class="downlabel"><select id="scaledropdown" class="dropdwn" onchange="scaledropChangeS(this.selectedIndex);">
+                <option selected>major</option>
+                <option>minor</option>
+                <option>dorian</option>
+                <option>mixolydian</option>
+                <option>phrygian</option>
+                <option>lydian</option>
+               </select></label>
+             </div>
+             <paper-slider value="30" on-immediate-value-change="SCchange" on-value-change="SCchange" id="scaleslider"></paper-slider>
+            </div>
+
+       </div>
+      </div>
+     </neon-animatable>
+
+   <neon-animatable class='hundo flex'>
+   	<!--effects: pitch/bitcrush, delay, volume/pan-->
+      <div class="horizontal layout synthy_container">
+
+       <div class="fx flex-6 vertical layout around-justified">
+       	<div id="modspanny1S" class="flex-1 horizontal layout justified spanny">
+                    
+   	    <label><select class="dropdwn" id="sample_dropdwnS" onchange="moddropChange(this.value);" name="type">
+           <option selected value="lfo">Wobble</option>
+           <option value="ah">Auto-harmony</option>
+           <option value="adsr">Attack / Decay</option>
+           <option value="osc1">Oscillator #1</option>
+           <option value="osc2">Oscillator #2</option>
+         </select></label>
+
+        </div>
+
+       <div class="flex-8 vertical layout" id="xy_bounderS">
+        
+       <paper-button style="overflow:hidden;" class="flex" onclick='return false;' on-up="getClickPosition" on-track="getClickPosition" on-down="hear_a_note" id="xyS">
+        <svg class="modsvg" id="lfosvg" viewBox="0 0 300 100" preserveAspectRatio="none" style$="{{lfostyle}}"> 
+          <polyline id="lfopolyline" points="0,100 25,0 50,100 75,0 100,100 125,0 150,100 175,0 200,100 225,0 250,100 275,0 300,100" fill="rgba(0,0,0,0)" stroke="#765373" stroke-width="3" stroke-linejoin="round"/>
+        </svg>
+        <svg class="modsvg" id="ahsvg" style$="{{ahstyle}}" viewBox="0 0 301 200" preserverAspectRation="none">
+        	<line x1="0" y1="194" x2="300" y2="194" stroke="#FB3F00" stroke-width="6"></line>
+        	<line id="ahline1" x1="0" y1="200" x2="300" y2="200" stroke="#765373" stroke-width="6" style="display:none;"></line>
+        	<line id="ahline2" x1="0" y1="200" x2="300" y2="200" stroke="#765373" stroke-width="6" style="display:none;"></line>
+          <line id="ahline3" x1="0" y1="200" x2="300" y2="200" stroke="#765373" stroke-width="6" style="display:none;"></line>
+        </svg>
+        <svg class="modsvg" id="adsrsvg" style$="{{adsrstyle}}" viewBox="0 0 301 200" preserveAspectRatio="none"><polyline id="adsrpolyline" points="0,200 0,3 25,3 290,3 300,200" fill="rgba(0,0,0,0.1)" stroke="#765373" stroke-width="3"/></polyline>
+        </svg>
+        <svg class="modsvg" id="playline" viewBox="0 0 301 200" preserverAspectRation="none">
+        	<line x1="0" y1="0" x2="0" y2="200" stroke="yellow" stroke-width="1">
+        </svg>
+        <div id="thingS"></div>
+       </paper-button>
+       
+       </div>
+
+       <div id="modspanny2S" class="flex-1 horizontal layout around-justified spanny">
+       		
+       		<span style="white-space: nowrap;" class="horizontal layout center">
+       					<svg id="fx_svg1S" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 60 100" xml:space="preserve">
+    					<polyline id="fxxpolyline" style="fill:none;stroke:black;stroke-width:6;" stroke-linecap="round" stroke-linejoin="round" points="0.375,20.375 45.63,58.087 0.375,95.8 "/></svg>
+            <span id="fx_ui1S" on-tap="fxui1_click" style="cursor: pointer; cursor: hand; margin: 0 5px">Speed: </span><b>{{x_pos}}</b>
+          </span>
+
+       		<span style="white-space: nowrap;" class="horizontal layout center">
+    					<svg id="fx_svg2S" viewBox="0 0 90 50" xml:space="preserve">
+    					<polyline style="fill:none;stroke:black;stroke-width:4" stroke-linecap="round" stroke-linejoin="round" points="0.375,38.087 38.087,0.375 75.8,38.087 "/></polyline></svg>
+       		   <span id="fx_ui2S" on-tap="fxui2_click" style="cursor: pointer; cursor: hand; margin: 0 5px">Amount: </span><b>{{y_pos}}</b>
+          </span>
+
+       </div>
+
+       </div>
+       
+       <paper-vert-tabs align-left id="tabsamplesS" class="flex-1 vert self-end" selected="{{mode_selected}}">
+          <paper-tab class="vtab" id="t1S" on-tap="play_note" name="1">
+          	<svg class="flex svgmargin" id="vtabicon1" viewBox="0,0,50,50" preserverAspectRation="none">
+          		<polyline points="0,50 25,0 50,50" stroke="#765373" stroke-width="7" fill="rgba(0,0,0,0)"/>
+          	</svg><span style="display:none;">1</span>
+          </paper-tab>
+          <paper-tab class="vtab" id='t2S' on-tap="play_note" name="2">
+          	<svg class="flex svgmargin" id="vtabicon2" viewBox="0,0,50,50" preserverAspectRation="none">
+          		<polyline points="0,0 25,50 50,0" stroke="#765373" stroke-width="7" fill="rgba(0,0,0,0)"/>
+          	</svg><span style="display:none;">2</span>
+          </paper-tab>
+          <paper-tab class="vtab" id='t3S' on-tap="play_note" name="3">
+          	<svg class="flex svgmargin" id="vtabicon3" viewBox="0,0,50,50" preserverAspectRation="none">
+          		<polyline points="0,0 0,50 50,50 50,0" stroke="#765373" stroke-width="7" fill="rgba(0,0,0,0)"/>
+          	</svg><span style="display:none;">2</span>
+          </paper-tab>
+          <paper-tab class="vtab" id='t4S' on-tap="play_note" name="4">
+          	<svg class="flex svgmargin" id="vtabicon4" viewBox="0,0,50,50" preserverAspectRation="none">
+          		<polyline points="0,50 0,0 50,0 50,50" stroke="#765373" stroke-width="7" fill="rgba(0,0,0,0)"/>
+          	</svg><span style="display:none;">2</span>
+          </paper-tab>
+          <paper-tab class="vtab" id='t5S' on-tap="play_note" name="5">
+          	<svg class="flex svgmargin" id="vtabicon5" viewBox="0,0,50,50" preserverAspectRation="none">
+          		<polyline points="0,50 50,0 50,50" stroke="#765373" stroke-width="7" fill="rgba(0,0,0,0)"/>
+          	</svg><span style="display:none;">2</span>
+          </paper-tab>
+          <paper-tab class="vtab" id='t6S' on-tap="play_note" name="6">
+          	<svg class="flex svgmargin" id="vtabicon5" viewBox="0,0,50,50" preserverAspectRation="none">
+          		<polyline points="0,50 0,0 50,50" stroke="#765373" stroke-width="7" fill="rgba(0,0,0,0)"/>
+          	</svg><span style="display:none;">2</span>
+          </paper-tab>
+          <!--<paper-tab class="vtab" id='t7' on-tap="{{play_samp7}}" name="7"></paper-tab>-->
+          <!--<paper-tab class="vtab" id='t8' on-tap="{{play_samp8}}" name="8" style="display:none;"></paper-tab>-->
+      </paper-vert-tabs>
+     </div>
+   </neon-animatable><!--END EFFECTS VISIBLE-->
+
+   
+
+   <neon-animatable class="hundo flex">
+      <div class="horizontal layout around-justified synthy_container">
+        <div class="vertical layout center around-justified">
+          <span>Beat # <span>{{spot}}</span></span>
+          <span>Octave: <span>{{spot_octave_ui}}</span></span>
+            <div class="horizontal layout">
+              <span class="vertical layout">
+                <paper-icon-button class="octavia" icon="add" on-tap="octave_add"></paper-icon-button>
+                <paper-icon-button class="octavia" icon="remove" on-tap="octave_subtract"></paper-icon-button>
+              </span>
+            </div>
+        </div>
+      </div>
+   </neon-animatable>
+
+   </neon-animated-pages>
+
+</div> <!--end MIDDLE container-->
+
+
+	</div><!--central container-->
+	<ul class="flex-1 layout vertical" id="synth_row_2">
+	  <paper-button id="i2" class="sS flex" on-tap="show_spot"></paper-button>
+	  <paper-button id="j2" class="sS flex" on-tap="show_spot"></paper-button>
+	  <paper-button id="k2" class="sS flex" on-tap="show_spot"></paper-button>
+	  <paper-button id="l2" class="sS flex" on-tap="show_spot"></paper-button>
+	  <paper-button id="m2" class="sS flex" on-tap="show_spot"></paper-button>
+	  <paper-button id="n2" class="sS flex" on-tap="show_spot"></paper-button>
+	  <paper-button id="o2" class="sS flex" on-tap="show_spot"></paper-button>
+	  <paper-button id="p2" class="sS flex" on-tap="show_spot"></paper-button>
+	</ul>
+</div><!--inner container-->
+<ul class="flex-1 layout horizontal-reverse" id="synth_row_3">
+  <paper-button id="q2" class="sS flex" on-tap="show_spot"></paper-button>
+  <paper-button id="r2" class="sS flex" on-tap="show_spot"></paper-button>
+  <paper-button id="s2" class="sS flex" on-tap="show_spot"></paper-button>
+  <paper-button id="t2" class="sS flex" on-tap="show_spot"></paper-button>
+  <paper-button id="u2" class="sS flex" on-tap="show_spot"></paper-button>
+  <paper-button id="v2" class="sS flex" on-tap="show_spot"></paper-button>
+  <paper-button id="w2" class="sS flex" on-tap="show_spot"></paper-button>
+  <paper-button id="x2" class="sS flex" on-tap="show_spot"></paper-button>
+</ul>
+</div><!--synth_container-->
+
+<!--<content></content>-->
+</template>
+<!--<script type="text/javascript" src="js/prefixfree.min.js"></script>-->
+<!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js" charset="utf-8"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
+<script type="text/javascript" src="buffer-loader.js"></script>-->
+<script>
+
+
+
+
+function getPositionS(element) {
+    var xPosition = 0;
+    var yPosition = 0;
+      
+    while (element) {
+        xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+        yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+        element = element.offsetParent;
+    }
+
+    return { x: xPosition, y: yPosition };
+};
+
+function scaleToXS(x) {
+	//var sc = document.getElementById('synth-card');
+  var xywidth=sc.xywidth;
+  var xval=x/(100/xywidth)+1;
+  return xval-10;
+}
+function scaleToYS(y) {
+	//var sc = document.getElementById('synth-card');
+	var xyheight=sc.xyheight;
+  var yval=(y*-1)/(100/xyheight)+xyheight-20;
+  return yval + sc.xyheight/19;
+}
+
+
+
+moddropChange=function(index) {
+  Synth.effect_selected = index;
+	//DEEP SHADOW DOM SEARCHING
+	//var getter = document.querySelector('html /deep/ #fx_ui1S');
+	//var getter2 = document.querySelector('html /deep/ #fx_ui2S');
+    //var sc = document.getElementById('synth-card');
+    var getter = sc.$.fx_ui1S;
+    var getter2 = sc.$.fx_ui2S;
+    var tabs = sc.$.tabsamplesS;
+    var thing=sc.$.thingS;
+	if (index=='lfo') {
+    sc.mode_selected=sc.lfo_selected-1;
+		sc.$.lfosvg.style.display = "block";
+		//sc.$.arpsvg.style.display = "none";
+		sc.$.ahsvg.style.display = "none";
+    sc.$.adsrsvg.style.display = "none";
+	  getter.innerHTML = "Speed: "; getter2.innerHTML = "Depth: ";
+      sc.x_pos = Synth.FX.lfo1;
+      sc.y_pos = Synth.FX.lfo2;
+      thing.style.display = "block";
+      thing.style.transition='left 0s ease-in, top 0s ease-in';
+      thing.style.borderRadius='10px'
+      thing.style.height='10px';
+      thing.style.width='10px';
+      thing.style.border='5px solid #5C6BC0';
+      //thing.style.left = scaleToXS(Synth.FX.pitch[samp])+'px';
+      //thing.style.top = scaleToYS(Synth.FX.gain[samp])+'px';
+      thing.style.left = scaleToXS(Synth.FX.lfo1)+'px';
+        thing.style.top = scaleToYS(Synth.FX.lfo2)+'px';
+      for(var i=1;i<7;i++) {
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[2].style.display="block";
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[2].childNodes[1].setAttribute("points",lfo_icons_array[i]);
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[3].style.display="none";
+      	/*tabs.childNodes[i*2-1].childNodes[1].style.display="block";
+      	tabs.childNodes[i*2-1].childNodes[1].childNodes[1].setAttribute("points",lfo_icons_array[i]);
+      	tabs.childNodes[i*2-1].childNodes[2].style.display="none";*/
+      };
+	}
+	else if (index=='ah') {
+    sc.mode_selected=sc.ah_selected-1;
+		sc.$.lfosvg.style.display = "none";
+		//sc.$.arpsvg.style.display = "none";
+		sc.$.ahsvg.style.display = "block";
+    sc.$.adsrsvg.style.display = "none";
+		getter.innerHTML ="Voices: "; getter2.innerHTML = "Octave: ";
+	    sc.x_pos = Synth.FX.ah1;
+	    sc.y_pos = Synth.FX.ah2;
+	    thing.style.display = "block";
+	    thing.style.transition='left 0s ease-in, top 0s ease-in';
+        thing.style.borderRadius='0px';
+        thing.style.height='8px';
+        thing.style.width='8px';
+        thing.style.border='5px solid #5C6BC0';
+    	thing.style.left = scaleToXS(Synth.FX.ah1)+'px';
+        thing.style.top = scaleToYS(Synth.FX.ah2)+'px';
+        for(var i=1;i<7;i++) {
+          tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[2].style.display="none";
+          tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[3].style.display="block";
+          tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[3].innerHTML=ah_icons_array[i];
+	      	/*tabs.childNodes[i*2-1].childNodes[1].style.display="none";
+	      	tabs.childNodes[i*2-1].childNodes[2].style.display="block";
+	      	tabs.childNodes[i*2-1].childNodes[2].innerHTML=ah_icons_array[i];*/
+	      };
+	}
+  else if (index=='adsr') {
+    sc.mode_selected=sc.adsr_selected-1;
+    sc.$.lfosvg.style.display = "none";
+    //sc.$.arpsvg.style.display = "none";
+    sc.$.ahsvg.style.display = "none";
+    sc.$.adsrsvg.style.display = "block";
+    getter.innerHTML ="Decay: "; getter2.innerHTML = "Attack: ";
+    sc.x_pos = Synth.FX.adsr1;
+    sc.y_pos = Synth.FX.adsr2;
+      thing.style.display = "block";
+      thing.style.transition='left 0s ease-in, top 0s ease-in';
+      thing.style.borderRadius='10px'
+      thing.style.height='10px';
+      thing.style.width='10px';
+      thing.style.border='5px solid #5C6BC0';
+      thing.style.left = scaleToXS(Synth.FX.adsr1)+'px';
+        thing.style.top = scaleToYS(Synth.FX.adsr2)+'px';
+      for(var i=1;i<7;i++) {
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[2].style.display="block";
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[2].childNodes[1].setAttribute("points",adsr_icons_array[i]);
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[3].style.display="none";
+        /*tabs.childNodes[i*2-1].childNodes[1].style.display="block";
+        tabs.childNodes[i*2-1].childNodes[1].childNodes[1].setAttribute("points",adsr_icons_array[i]);
+        tabs.childNodes[i*2-1].childNodes[2].style.display="none";*/
+      };
+  }
+  else if (index=='osc1') {
+    sc.mode_selected=sc.osc1_selected-1;
+    sc.$.lfosvg.style.display = "none";
+    //sc.$.arpsvg.style.display = "none";
+    sc.$.ahsvg.style.display = "none";
+    sc.$.adsrsvg.style.display = "none";
+    getter.innerHTML = "Wave: "; getter2.innerHTML = "Fade: ";
+      sc.x_pos = numberToWave(Math.round(Synth.FX.osc1wave/33));
+      sc.y_pos = Synth.FX.osc1fade;
+      thing.style.display = "block";
+      thing.style.transition='left 0s ease-in, top 0s ease-in';
+      thing.style.borderRadius='10px'
+      thing.style.height='10px';
+      thing.style.width='10px';
+      thing.style.border='5px solid #5C6BC0';
+      //thing.style.left = scaleToXS(Synth.FX.pitch[samp])+'px';
+      //thing.style.top = scaleToYS(Synth.FX.gain[samp])+'px';
+      thing.style.left = scaleToXS(Synth.FX.osc1wave)+'px';
+        thing.style.top = scaleToYS(Synth.FX.osc1fade)+'px';
+      for(var i=1;i<7;i++) {
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[2].style.display="none";
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[3].style.display="block";
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[3].innerHTML=osc_icons_array[i];
+        /*tabs.childNodes[i*2-1].childNodes[1].style.display="none";
+        tabs.childNodes[i*2-1].childNodes[2].style.display="block";
+        tabs.childNodes[i*2-1].childNodes[2].innerHTML=osc_icons_array[i];*/
+      };
+  }
+  else if (index=='osc2') {
+    sc.mode_selected=sc.osc2_selected-1;
+    sc.$.lfosvg.style.display = "none";
+    //sc.$.arpsvg.style.display = "none";
+    sc.$.ahsvg.style.display = "none";
+    sc.$.adsrsvg.style.display = "none";
+    getter.innerHTML = "Wave: "; getter2.innerHTML = "Fade: ";
+      sc.x_pos = numberToWave(Math.round(Synth.FX.osc2wave/33));
+      sc.y_pos = Synth.FX.osc2fade;
+      thing.style.display = "block";
+      thing.style.transition='left 0s ease-in, top 0s ease-in';
+      thing.style.borderRadius='10px'
+      thing.style.height='10px';
+      thing.style.width='10px';
+      thing.style.border='5px solid #5C6BC0';
+      //thing.style.left = scaleToXS(Synth.FX.pitch[samp])+'px';
+      //thing.style.top = scaleToYS(Synth.FX.gain[samp])+'px';
+      thing.style.left = scaleToXS(Synth.FX.osc2wave)+'px';
+        thing.style.top = scaleToYS(Synth.FX.osc2fade)+'px';
+      for(var i=1;i<7;i++) {
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[2].style.display="none";
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[3].style.display="block";
+        tabs.childNodes[3].childNodes[1].childNodes[i].childNodes[1].childNodes[3].innerHTML=osc_icons_array[i];
+        /*tabs.childNodes[i*2-1].childNodes[1].style.display="none";
+        tabs.childNodes[i*2-1].childNodes[2].style.display="block";
+        tabs.childNodes[i*2-1].childNodes[2].innerHTML=osc_icons_array[i];*/
+      };
+  }
+window.scroll(0,0) 
+  
+};//end moddropchange
+
+
+function numberToWave(waveform) {
+  var wavestring;
+  if (waveform==0) { wavestring='tri';}
+  else if (waveform==1) { wavestring='sqr';}
+  else if (waveform==2) { wavestring='saw';}
+  else if (waveform==3) { wavestring='sin';}
+  return wavestring;
+};
+
+
+scaledropChangeS = function(index) {
+  //var sc = document.getElementById('synth-card');
+  Synth.scale_dropdown_selected=index;
+	if (index==0) {
+		sc.scale=scale_array.major;
+	}
+	else if (index==1) {
+		sc.scale=scale_array.minor;
+	}
+	else if (index==2) {
+		sc.scale=scale_array.dorian;
+	}
+	else if (index==3) {
+		sc.scale=scale_array.mixolydian;
+	}
+	else if (index==4) {
+		sc.scale=scale_array.phrygian;
+	}
+	else if (index==5) {
+		sc.scale=scale_array.lydian;
+	}
+  Synth.scale=sc.scale;
+window.scroll(0,0) 
+};
+
+function filterdropChangeS(index) {
+  //lpf=0 hpf=1
+  if (index==0) {
+    Synth.filter_yo.type = 'lowpass';
+    Synth.filter_yo.Q.value = 4;
+  }
+  else if (index==1) {
+    Synth.filter_yo.type = 'lowpass';
+    Synth.filter_yo.Q.value = 12;
+  }
+  else if (index==2) {
+    Synth.filter_yo.type = 'lowpass';
+    Synth.filter_yo.Q.value = 24;
+  }
+  window.scroll(0,0) 
+};
+
+//maybe do this POLYMER way instead...
+reverbdropChangeS = function(index) {
+  Synth.convolver_yo.buffer = bufferListy[(index+8)];
+  Synth.reverb_dropdown_selected = index;
+  window.scroll(0,0) 
+  //ANOTHER WAY TO ACCESS THE SHADOW DOM
+  //var getter = document.querySelector('html /deep/ #reverbselect');//.children[index];
+};
+
+
+
+var until_synth_on=true;
+var until_synth_noteoff=0;
+var until_synth_noteoff_setting=0;
+//this is where the real stuff goes down
+function play_yo_yoS(sc) {
+  if (Synth.setting==0) {
+          //var id_style=window.getComputedStyle(Synth.id_yo[Synth.setting], null).getPropertyValue('backgroundColor');
+          Synth.id_yo[Synth.setting].style.boxShadow="none";
+          Synth.id_yo[Synth.setting].style.opacity="1.0";
+          if (sc.spot_circle_selected==true && sc.spot-1==31) {
+            Synth.id_yo[(Synth.id_yo.length-1)].style.boxShadow="0 0 2pt 1pt black";
+          }
+          else {
+            Synth.id_yo[(Synth.id_yo.length-1)].style.boxShadow="2px 2px 10px #444";
+          }
+          Synth.id_yo[Synth.id_yo.length-1].style.opacity="0.6";
+        }
+        else {
+         //var id_style=window.getComputedStyle(Synth.id_yo[Synth.setting], null).getPropertyValue('backgroundColor'); outline: 1px solid #fff;
+         Synth.id_yo[Synth.setting].style.boxShadow="none";
+         Synth.id_yo[Synth.setting].style.opacity="1.0";
+         if (sc.spot_circle_selected==true && sc.spot-1==Synth.setting-1) {
+            Synth.id_yo[(Synth.setting-1)].style.boxShadow="0 0 2pt 1pt black";
+         }
+         else {
+            Synth.id_yo[(Synth.setting-1)].style.boxShadow="2px 2px 10px #444";
+         }
+         Synth.id_yo[(Synth.setting-1)].style.opacity="0.6"
+       }
+
+      var pitch=Synth.synth_array[Synth.setting];
+      //until_synth_noteoff starts a negative number, goes until it hits 1
+      until_synth_noteoff=until_synth_noteoff+1;
+
+      //yes there is a decay
+      if(until_synth_on==true) {
+        if(until_synth_noteoff==1 || pitch!=0){ sc.stop_note();}
+      }
+
+      if (pitch != 0) {
+        //no there is no decay, last played note must be stopped here IF a new note is to be played
+        if(until_synth_on==false) {sc.stop_note();}
+
+        //NOW the new note is played
+      	sc.play_voice(pitch);
+        until_synth_noteoff=until_synth_noteoff_setting;
+
+      }
+      else {
+        //still change the octave even if there is no note
+      	_S.Osc1Octave = Synth.osc1Octave+Synth.spotOctave[Synth.setting];
+    	_S.onOsc1Octave(_S.Osc1Octave);
+  		}
+
+}
+
+
+
+
+ var div_arrayS = ['a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2',
+ 'i2', 'j2', 'k2', 'l2', 'm2', 'n2', 'o2', 'p2',
+ 'q2', 'r2', 's2', 't2', 'u2', 'v2', 'w2', 'x2',
+ 'y2', 'z2', 'za2', 'zb2', 'zc2', 'zd2', 'ze2', 'zf2'];
+ var color_arrayS = ['rgb(187, 187, 204)', 'rgb(251, 63, 0)', 'rgb(3, 137, 244)', 'rgb(226, 100, 137)', 'rgb(102, 153, 34)', 'rgb(0, 178, 162)', 'rgb(210, 151, 21)', 'rgb(148, 124, 255)', 'rgb(255, 232, 28)'];
+
+
+var lfo_polyline_array=["0,100 25,0 50,100 75,0 100,100 125,0 150,100 175,0 200,100 225,0 250,100 275,0 300,100","0,0 25,100 50,0 75,100 100,0 125,100 150,0 175,100 200,0 225,100 250,0 275,100 300,0", "0,100 12.5,100 12.5,0 37.5,0 37.5,100 62.5,100 62.5,0 87.5,0 87.5,100 112.5,100 112.5,0 137.5,0 137.5,100 162.5,100 162.5,0 187.5,0 187.5,100 212.5,100 212.5,0 237.5,0 237.5,100 262.5,100 262.5,0 287.5,0 287.5,100", "0,0 12.5,0 12.5,100 37.5,100 37.5,0 62.5,0 62.5,100 87.5,100 87.5,0 112.5,0 112.5,100 137.5,100 137.5,0 162.5,0 162.5,100 187.5,100 187.5,0 212.5,0 212.5,100 237.5,100 237.5,0 262.5,0 262.5,100 287.5,100 287.5,0", "0,100 50,0 50,100 100,0 100,100 150,0 150,100 200,0 200,100 250,0 250,100, 300,0 300,100", "0,100 0,0 50,100 50,0 100,100 100,0 150,100 150,0 200,100 200,0 250,100 200,0 250,100 250,0 300,100 300,0"];
+
+var lfo_icons_array=["","0,50 25,0 50,50", "0,0 25,50 50,0", "0,0 0,50 50,50 50,0", "0,50 0,0 50,0 50,50", "0,50 50,0 50,50", "0,50 0,0 50,50"];
+
+var adsr_icons_array=["","0,50 10,0 20,0 40,0 50,50", "0,50 10,0 20,10 40,10 50,50", "0,50 10,0 20,25 40,25 50,50", "0,50 10,0 50,0", "0,50 10,0 20,10 50,10", "0,50 10,0 20,25 50,25"];
+
+var arp_icons_array=["","x1","x2","x4","x8","/2","/4"];
+
+var ah_icons_array=["","3","4","5","6","7","9"];
+
+var osc_icons_array=["","+3","+2","+1","0","-1","-2"];
+
+var scale_array={
+  major: [0,0,2,4,5,7,9,11,12, 14,16,17,19,21,23,24, 26,28,29,31,33,35,36, 38],
+  minor: [0,0,2,3,5,7,8,10,12, 14,15,17,19,20,22,24, 26,27,29,31,32,34,36, 38],
+  dorian: [0,0,2,3,5,7,9,10,12, 14,15,17,19,21,22,24, 26,27,29,31,33,34,36, 38],
+  mixolydian: [0,0,2,4,5,7,9,10,12, 14,16,17,19,21,22,24, 26,28,29,31,33,34,36, 38],
+  phrygian: [0,0,1,3,5,7,8,10,12, 13,15,17,19,20,22,24, 25,27,29,31,32,34,36, 37],
+  lydian: [0,0,2,4,6,7,9,11,12, 14,16,18,19,21,23,24, 26,28,30,31,33,35,36, 38]
+};
+
+var letters_array=['A','A#','B','C','C#','D','D#','E','F','F#','G','G#']
+
+
+
+
+
+
+Polymer({
+
+  is: 'synth-card',
+
+  properties: {
+
+      mode_selected: {
+        type: Number,
+        value: 0,
+        observer: 'mode_selectedChanged'
+      },
+
+      filter_cutoff: {
+        type: Number,
+        value: 45,
+        observer: 'filter_cutoffChanged'
+      },
+
+      reverb_setting: {
+        type: Number,
+        value: 30,
+        observer: 'reverb_settingChanged'
+      },
+
+      scale_setting: {
+        type: Number,
+        value: 30,
+        observer: 'scale_settingChanged'
+      },
+
+      lfo_stretch: {
+        type: Number,
+        value: 0,
+        observer: 'lfo_stretchChanged'
+      },
+
+      x_pos: {
+        type: Number,
+        value: 0,
+        observer: 'x_posChanged'
+      },
+
+      y_pos: {
+        type: Number,
+        value: 0
+      },
+
+      lfo_selected: {
+        type: Number,
+        value: 1,
+        observer: 'lfo_selectedChanged'
+      },
+
+  },
+
+  REchange: function(e) {
+    this.reverb_setting=e.target.immediateValue;
+  },
+  FCchange: function(e) {
+    this.filter_cutoff=e.target.immediateValue;
+  },
+  SCchange: function(e) {
+    this.scale_setting=e.target.immediateValue;
+  },
+
+  ready: function() {
+    var avatar;
+    avatar = document.createElement('drag-avatar');
+    document.body.appendChild(avatar);
+    this.avatar = avatar;
+    var pages = this.$.innerpagesS;
+    var tabs = this.$.innertabsS;
+    var bounder = this.$.xy_bounderS;
+    var sc=this;
+    tabs.addEventListener('iron-select', selekt);
+    function selekt() {
+      pages.selected=tabs.selected
+      if (pages.selected==2) {
+        sc.xyheight=bounder.clientHeight;
+        sc.xywidth=bounder.clientWidth;
+        sc.ahinterval=sc.xyheight/16;
+        sc.$.playline.style.height=sc.xyheight;
+        sc.lfo_stretch=sc.xywidth/6;
+        sc.ahstyle="width:"+sc.xywidth+"px;height:"+sc.xyheight+"px;";
+        sc.adsrstyle="width:"+sc.xywidth+"px;height:"+sc.xyheight+"px;";
+        //sc.mode_selectedChanged();
+        var thing=sc.$.thingS;
+        sc.lfo_height = Synth.FX.lfo2 * (sc.xyheight / 100);
+        sc.lfo_stretch = Synth.FX.lfo1 * (sc.xywidth / 100);
+        moddropChange(Synth.effect_selected);
+        //thing.style.left = scaleToXS(Synth.FX.lfo1)+'px';
+        //thing.style.top = scaleToYS(Synth.FX.lfo2)+'px';
+      }
+      sc.not_show_spot();
+      tabs.removeEventListener('iron-select', selekt);
+      window.setTimeout(addBack,501)
+    }
+    function addBack() {
+      tabs.addEventListener('iron-select', selekt);
+    }
+
+    var id_list = this.$.synth_container.querySelectorAll('.sS');
+      Synth.id_yo = Array.prototype.slice.call(id_list, 0);
+      Synth.id_yo.sort(function(a,b) {
+        if (a.id < b.id)
+          return -1;
+        if (a.id > b.id)
+          return 1;
+        return 0;
+      });
+
+    for(var i=0;i<Synth.id_yo.length;i++) {
+      Synth.id_yo[i].style.padding="0px";
+    }
+
+    this.x_pos = 0;
+    this.y_pos=0;
+
+  },
+
+    handleTrack: function(e) {
+      this.stop_note();
+    switch(e.detail.state) {
+      case 'start':
+        var color = window.getComputedStyle(e.target)['background-color'];
+        this.avatar.style.cssText = 'display:block;border: 3px solid ' + color + '; width: 15px; height: 15px; border-radius: 15px; background-color: whitesmoke; z-index: 9;';
+        break;
+      case 'track':
+          var x = e.detail.x, y = e.detail.y;
+          this.avatar.style.transform = 
+            this.avatar.style.webkitTransform = 
+              'translate(' + x + 'px, ' + y + 'px)';
+        break;
+      case 'end':
+        this.avatar.style.display = 'none';
+        var color = window.getComputedStyle(e.target)['background-color'];
+        var dropTarget = e.detail.hover();
+        if (color && dropTarget.classList[0] === 'sS') {
+          this.dropyo(color, dropTarget);
+        }
+        break;
+    }
+  },
+
+  dropyo: function(color, dropTarget) {
+      var id_name=dropTarget.id;
+      var spot=div_arrayS.indexOf(id_name);
+      dropTarget.style.background = color;
+      Synth.synth_array[spot]=color_arrayS.indexOf(color);
+  },
+
+    spot: 1,
+    spot_circle: null,
+    spot_circle_selected: false,
+
+    show_spot: function(e) {
+
+      if (this.spot_circle_selected==true) {
+        this.spot_circle.style.boxShadow="2px 2px 10px #444";
+      }
+      this.spot_circle_selected = true;
+      this.spot_circle = e.target;
+      this.spot_circle.style.boxShadow = "0 0 2pt 1pt black";//"0 0 3pt 3pt black";
+      this.spot = div_arrayS.indexOf(e.target.id)+1;
+      this.$.innertabsS.selected=3;
+      this.$.innerpagesS.selected=3;
+      //this.central_selected=3;
+
+      this.spot_octave_ui=Synth.spotOctave[this.spot-1];
+    },
+
+    not_show_spot: function() {
+      if (this.spot_circle_selected==true) {
+        this.spot_circle.style.boxShadow="2px 2px 10px #444";
+      }
+      this.spot_circle_selected = false;
+      //this.tone_visible = 'display: none;';
+    },
+
+    spot_octave_ui: 0,
+
+    octave_add: function() {
+      if (Synth.spotOctave[this.spot-1]<3) {
+        Synth.spotOctave[this.spot-1]=Synth.spotOctave[this.spot-1]+1;
+        this.spot_octave_ui=Synth.spotOctave[this.spot-1];
+      }
+    },
+
+    octave_subtract: function() {
+      if (Synth.spotOctave[this.spot-1]>-3) {
+        Synth.spotOctave[this.spot-1]=Synth.spotOctave[this.spot-1]-1;
+        this.spot_octave_ui=Synth.spotOctave[this.spot-1];
+      }
+    },
+
+     dragEnd: function() {
+      
+      if (Beats.not_playing==true) {
+        this.stop_note();
+      }
+      },
+
+    sample_pitch: 50,
+    sample_pitch_proxy: 50,
+
+    sample_level: 50,
+    sample_level_proxy: 50,
+
+    base_note: 48,
+    scale:[0,0,2,4,5,7,9,11,12, 14,16,17,19,21,23,24, 26,28,29,31,33,35,36, 38],
+    last_note_played: null,
+    last_note_played2:null,
+    last_note_played3:null,
+    last_note_played4:null,
+    
+    stop_note: function() {
+      
+        _S.noteOff(this.last_note_played);
+        if(Synth.MOD.ah[0]!=0) {
+          _S.noteOff(this.last_note_played2);
+        }
+        if(Synth.MOD.ah[1]!=0) {
+          _S.noteOff(this.last_note_played3);
+        }
+        if(Synth.MOD.ah[2]!=0) {
+          _S.noteOff(this.last_note_played4);
+        }
+    },
+    //for when click on mod
+    hear_a_note: function() {
+      this.stop_note();
+      this.play_voice(1);
+    },
+    play_a_note: function(note) {
+      this.stop_note();
+      this.play_voice(note);
+      //this.async(function() {
+        if(Main.is_rec==true) {
+          var spot=Beats.setting;
+          if(spot== -1){spot=31};
+          Synth.synth_array[spot]=note;
+          Synth.id_yo[spot].style.backgroundColor=color_arrayS[note];
+        }
+      //},50);
+    },
+    play_note1: function() {
+      this.play_a_note(1);
+    },
+    play_note2: function() {
+      this.play_a_note(2);
+    },
+    play_note3: function() {
+      this.play_a_note(3);
+    },
+    play_note4: function() {
+      this.play_a_note(4);
+    },
+    play_note5: function() {
+      this.play_a_note(5);
+    },
+    play_note6: function() {
+      this.play_a_note(6);
+    },
+    play_note7: function() {
+      this.play_a_note(7);
+    },
+    play_note8: function() {
+      this.play_a_note(8);
+    },
+
+    play_voice: function(notey) {
+
+      var octavey = 0;
+      if (Beats.not_playing==false) {
+        octavey = Synth.spotOctave[Synth.setting]*12;
+      }
+    	
+	    var note = this.base_note +octavey+ this.scale[notey] + 12*(3-_S.Octave);
+	    _S.noteOn( note, 0.75 );
+	    this.last_note_played=note;
+
+	    if(Synth.MOD.ah[0]!=0) {
+		    note2 = this.base_note +octavey+ this.scale[notey-1+Synth.MOD.ah[0]] + 12*(3-_S.Octave);
+		    _S.noteOn( note2, 0.65);
+		    this.last_note_played2=note2;
+  		}
+  		if(Synth.MOD.ah[1]!=0) {
+  		    note3 = this.base_note +octavey+ this.scale[notey-1+Synth.MOD.ah[1]] + 12*(3-_S.Octave);
+  		    _S.noteOn( note3, 0.55);
+  		    this.last_note_played3=note3;
+  		}
+  		if(Synth.MOD.ah[2]!=0) {
+  		    note4 = this.base_note +octavey+ this.scale[notey-1+Synth.MOD.ah[2]] + 12*(3-_S.Octave);
+  		    _S.noteOn( note4, 0.45);
+  		    this.last_note_played4=note4;
+  		}
+
+     
+    },//end play_voice
+
+    //makes the line go in MODS section
+    play_note: function() {
+    	var playline=this.$.playline;
+    	playline.style.transition="margin-left 0s linear";
+    	playline.style.webkitTransition="margin-left 0s linear";
+    	playline.style.marginLeft="0%";
+    	go=function() {
+    		playline.style.transition="margin-left 2s linear";
+    		playline.style.webkitTransition="margin-left 2s linear";
+    		playline.style.marginLeft="100%";
+    	};
+    	window.setTimeout(go,6);
+    },
+    
+    mode_selectedChanged: function() {
+
+        if (Synth.effect_selected=='lfo') {
+          this.lfo_selected=this.mode_selected+1;
+
+        }
+        else if (Synth.effect_selected=='arp') {
+          this.arp_selected=this.mode_selected+1;
+        	
+        }
+        else if (Synth.effect_selected=='ah') {
+          this.ah_selected=this.mode_selected+1;
+        	var ahline1 = this.$.ahline1;
+        	var ahline2 = this.$.ahline2;
+        	this.ahColors(false);
+
+        }
+        else if (Synth.effect_selected=='adsr') {
+          this.adsr_selected=this.mode_selected+1;
+          if(this.mode_selected==0){this.sustain=100;this.blahblah=290;until_synth_on=true;}
+          else if(this.mode_selected==1){this.sustain=60;this.blahblah=290;until_synth_on=true;}
+          else if(this.mode_selected==2){this.sustain=20;this.blahblah=290;until_synth_on=true;}
+          else if(this.mode_selected==3){this.sustain=100;this.blahblah=500;until_synth_on=false;}
+          else if(this.mode_selected==4){this.sustain=60;this.blahblah=500;until_synth_on=false;}
+          else if(this.mode_selected==5){this.sustain=20;this.blahblah=500;until_synth_on=false;} 
+
+          this.adsrupdate(this);
+
+          _S.onEnvS(this.sustain);
+          _S.onFilterEnvS(this.sustain);
+
+        }
+        else if (Synth.effect_selected=='osc1') {
+          this.osc1_selected=this.mode_selected+1;
+          var octave = 5-this.mode_selected-1;
+          Synth.osc1Octave=octave;
+          _S.onOsc1Octave(octave);
+        }
+        else if (Synth.effect_selected=='osc2') {
+          this.osc2_selected=this.mode_selected+1;
+          var octave = 5-this.mode_selected-1;
+          _S.onOsc2Octave(octave);
+        }
+    },//end mode_selectedChanged
+
+    lfo_selectedChanged: function() {
+      var lfogetter=this.$.lfopolyline;
+      lfogetter.setAttribute("points",lfo_polyline_array[this.lfo_selected-1]);
+      var waveform=0;
+          if(this.lfo_selected==1){waveform=0;}
+          else if(this.lfo_selected==2){waveform=0;}
+          else if(this.lfo_selected==3){waveform=1;}
+          else if(this.lfo_selected==4){waveform=1;}
+          else if(this.lfo_selected==5){waveform=2;}
+          else if(this.lfo_selected==6){waveform=2;}
+          _S.onModWaveform( _S.oscwaves[waveform] );
+    },
+
+    ahColors: function(from_click) {
+
+    	if(this.ah_selected==1) {
+	            this.ahlineNote1=this.ahThirds[this.ah_y][this.ah_x][0];
+	            this.ahlineNote2=this.ahThirds[this.ah_y][this.ah_x][1];
+	            this.ahlineNote3=this.ahThirds[this.ah_y][this.ah_x][2];
+        	}
+        	else if(this.ah_selected==2) {
+	            this.ahlineNote1=this.ahFourths[this.ah_y][this.ah_x][0];
+	            this.ahlineNote2=this.ahFourths[this.ah_y][this.ah_x][1];
+	            this.ahlineNote3=this.ahFourths[this.ah_y][this.ah_x][2];
+	        }
+        	else if(this.ah_selected==3) {
+	            this.ahlineNote1=this.ahFifths[this.ah_y][this.ah_x][0];
+	            this.ahlineNote2=this.ahFifths[this.ah_y][this.ah_x][1];
+	            this.ahlineNote3=this.ahFifths[this.ah_y][this.ah_x][2];
+        	}
+        	else if(this.ah_selected==4) {
+	            this.ahlineNote1=this.ahSixths[this.ah_y][this.ah_x][0];
+	            this.ahlineNote2=this.ahSixths[this.ah_y][this.ah_x][1];
+	            this.ahlineNote3=this.ahSixths[this.ah_y][this.ah_x][2];
+        	}
+        	else if(this.ah_selected==5) {
+	            this.ahlineNote1=this.ahSevenths[this.ah_y][this.ah_x][0];
+	            this.ahlineNote2=this.ahSevenths[this.ah_y][this.ah_x][1];
+	            this.ahlineNote3=this.ahSevenths[this.ah_y][this.ah_x][2];
+        	}
+        	else if(this.ah_selected==6) {
+	            this.ahlineNote1=this.ahNinths[this.ah_y][this.ah_x][0];
+	            this.ahlineNote2=this.ahNinths[this.ah_y][this.ah_x][1];
+	            this.ahlineNote3=this.ahNinths[this.ah_y][this.ah_x][2];
+        	}
+      
+      this.$.ahsvg.childNodes[3].setAttribute('y1',200-(12.5*this.ahlineNote1));
+      this.$.ahsvg.childNodes[3].setAttribute('y2',200-(12.5*this.ahlineNote1));
+      this.$.ahsvg.childNodes[3].setAttribute('stroke',this.color_arrayS[this.ahlineNote1].toString());
+      this.$.ahsvg.childNodes[5].setAttribute('y1',200-(12.5*this.ahlineNote2));
+      this.$.ahsvg.childNodes[5].setAttribute('y2',200-(12.5*this.ahlineNote2));
+      this.$.ahsvg.childNodes[5].setAttribute('stroke',this.color_arrayS[this.ahlineNote2].toString());
+      this.$.ahsvg.childNodes[7].setAttribute('y1',200-(12.5*this.ahlineNote3));
+      this.$.ahsvg.childNodes[7].setAttribute('y2',200-(12.5*this.ahlineNote3));
+      this.$.ahsvg.childNodes[7].setAttribute('stroke',this.color_arrayS[this.ahlineNote3].toString());
+   
+      Synth.MOD.ah[0]=this.ahlineNote1;
+      Synth.MOD.ah[1]=this.ahlineNote2;
+      Synth.MOD.ah[2]=this.ahlineNote3;
+
+      if (from_click==true) {
+	      if (Synth.MOD.ah[0]==0) {_S.noteOff(this.last_note_played2);}
+	      if (Synth.MOD.ah[1]==0) {_S.noteOff(this.last_note_played3);}
+	      if (Synth.MOD.ah[2]==0) {_S.noteOff(this.last_note_played4);}
+  		}
+    },//ahColors()
+
+    ahThirds:[[[0,0,0],[3,0,0],[2,3,0],[3,5,0],[3,5,7]],
+    		  [[0,0,0],[10,0,0],[5,10,0],[10,12,0],[5,7,10]],
+    		  [[0,0,0],[6,0,0],[4,6,0],[6,4,0],[6,4,2]]],
+   	ahFourths:[[[0,0,0],[4,0,0],[2,4,0],[4,6,0],[4,6,8]],
+   	           [[0,0,0],[11,0,0],[6,11,0],[11,13,0],[6,9,11]],
+   	           [[0,0,0],[5,0,0],[6,5,0],[5,3,0],[5,3,1]]],
+   	ahFifths:[[[0,0,0],[5,0,0],[3,5,0],[5,7,0],[5,7,9]],
+   			  [[0,0,0],[12,0,0],[7,12,0],[12,14,0],[7,10,12]],
+   			  [[0,0,0],[4,0,0],[6,4,0],[4,2,0],[4,2,7]]],//hmmm, 7 here...
+    ahSixths:[[[0,0,0],[6,0,0],[3,6,0],[6,8,0],[6,8,10]],
+    		  [[0,0,0],[13,0,0],[5,13,0],[10,13,0],[5,10,13]],
+    		  [[0,0,0],[3,0,0],[6,3,0],[3,1,0],[3,1,6]]],//low 6 here
+    ahSevenths:[[[0,0,0],[7,0,0],[3,7,0],[7,9,0],[3,7,9]],
+    			[[0,0,0],[14,0,0],[9,14,0],[10,14,0],[10,12,14]],
+    			[[0,0,0],[2,0,0],[6,2,0],[2,7,0],[6,2,7]]],//two low 7s here
+    ahNinths:[[[0,0,0],[9,0,0],[5,9,0],[4,9,0],[4,5,9]],
+    		  [[0,0,0],[16,0,0],[12,16,0],[11,16,0],[5,11,16]],
+    		  [[0,0,0],[7,0,0],[4,7,0],[5,7,0],[5,4,7]]],
+
+    ahlineNote1: 0,
+    ahlineNote2: 0,
+    ahlineNote3: 0,
+    color_arrayS: ['rgb(187, 187, 204)', 'rgb(251, 63, 0)', 'rgb(3, 137, 244)', 'rgb(226, 100, 137)', 'rgb(102, 153, 34)', 'rgb(0, 178, 162)', 'rgb(210, 151, 21)', 'rgb(148, 124, 255)', 'rgb(255, 232, 28)','rgb(3, 137, 244)', 'rgb(226, 100, 137)', 'rgb(102, 153, 34)', 'rgb(0, 178, 162)', 'rgb(210, 151, 21)', 'rgb(148, 124, 255)', 'rgb(255, 232, 28)','rgb(3, 137, 244)', 'rgb(226, 100, 137)', 'rgb(102, 153, 34)', 'rgb(0, 178, 162)', 'rgb(210, 151, 21)', 'rgb(148, 124, 255)'],
+    
+
+    scale_settingChanged: function() {
+      if (Main.ready==true) {
+        //Synth.scale_yo.threshold.value = (0-this.scale_setting);
+        //Synth.scaleSetting=this.scale_setting;
+        this.scale_setting_numbers=Math.round(this.scale_setting/9.09);
+        this.scale_setting_letters=letters_array[this.scale_setting_numbers];
+        this.base_note=45+this.scale_setting_numbers;
+        Synth.base_note=this.base_note;
+        //Synth.levels[Synth.level_selected]=this.scale_setting;
+        //Synth.gain_nodes[Synth.level_selected].gain.value = (this.scale_setting/100.0);
+      }
+    },
+
+    
+
+    scale_setting_numbers: 0,
+    scale_setting_letters: 'C',
+
+  //AWESOME just add Changed for an automatic EventListener
+  filter_cutoffChanged: function() {
+    if (Main.ready==true) {
+    	var minValue = 40;
+    	var maxValue = 22050;
+    	//this math taken from HTML5rocks web audio page by Boris Smus
+    	var numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2; //natural logarithm of 2 = 0.693
+    	var multiplier = Math.pow(2, numberOfOctaves * (this.filter_cutoff/100.0 - 1.0));
+      //Synth.filterCutoff = maxValue * multiplier;
+      //Synth.filter_yo.frequency.value = Synth.filterCutoff+1;
+      _S.FilterCutoff = this.filter_cutoff;
+      _S.onFilterCutoff(_S.FilterCutoff);
+    }
+  },
+
+  reverb_settingChanged: function() {
+    if (Main.ready==true) {
+      if (this.reverb_setting==0 && Synth.reverb_on==true) {
+        Synth.wetGainNode.disconnect();
+        Synth.reverb_on=false;
+        //console.log('reverb disconnected');
+      }
+      else if (this.reverb_setting!=0 && Synth.reverb_on==true) {}
+      else {
+        Synth.wetGainNode.connect(Synth.convolver_yo);
+        Synth.reverb_on=true;
+        //console.log('reverb connected');
+      }
+
+      Synth.reverbSetting = this.reverb_setting;
+      Synth.dryGainNode.gain.value = 1-(Synth.reverbSetting/100.0);
+      Synth.wetGainNode.gain.value = (Synth.reverbSetting/100.0);
+    }
+  },
+
+  adsrupdate: function(sc) {
+    var x1=sc.attack+25;
+    var x2=sc.blahblah-(sc.decay*2)
+    if (x2<x1) {x2=x1}
+    sc.$.adsrsvg.childNodes[0].setAttribute('points',"0,200 "+sc.attack+",3 "+x1+","+(203-(sc.sustain*2))+" "+x2+","+(203-(sc.sustain*2))+" 300,200");
+  },
+
+  getClickPosition: function(e) {
+  	e.preventDefault();
+    var parentPosition = getPosition(e.target.parentNode)
+    if(e.target.tagName=='polyline' || e.target.tagName=='line') {
+      parentPosition = getPosition(e.target.parentNode.parentNode);
+    }
+    else if(e.target.id=='xyS') {
+      parentPosition = getPosition(e.target);
+    }
+    
+    var xPosition = e.detail.x - parentPosition.x; //- (thing.clientWidth / 2 );
+    var yPosition = e.detail.y - parentPosition.y; //- (thing.clientHeight / 2);
+    xPosition = Math.max(Math.min(xPosition,this.xywidth),0);
+    yPosition = Math.max(Math.min(yPosition,this.xyheight),0);
+    console.log(xPosition, yPosition)
+    
+    var x_poss=(xPosition-this.xywidth)*(100/this.xywidth)+100;     
+    var y_poss=(this.xyheight-yPosition)*(100/this.xyheight);   
+    
+    //set position
+    switch(e.type) {
+      case 'up':
+      this.$.thingS.style.transition='left .2s ease-in, top .2s ease-in';
+      sc.play_note();
+      sc.stop_note();
+      break;
+      case 'track':
+      this.$.thingS.style.transition='left 0s ease-in, top 0s ease-in';
+      break;
+    }
+    this.$.thingS.style.left = (xPosition-12) + "px";
+    this.$.thingS.style.top = (yPosition-10) + "px";
+
+    //console.log(this);
+    //THIS was the paper-button, and bind(this) returned window
+    //so querying the ELEMENT synth-card gives access to set published properties
+    //(which are usually accessed in Polymer with simply this.)
+    var xyheight=sc.xyheight;
+    var xywidth=sc.xywidth;
+    var samp = sc.mode_selected+1;
+    if (Synth.effect_selected=='lfo') {
+    	sc.x_pos = Math.round(x_poss);
+    	sc.y_pos = Math.round(y_poss);
+      sc.lfo_height = y_poss * (xyheight / 100);
+    	sc.lfo_stretch = x_poss * (xywidth / 100);
+    	Synth.FX.lfo1=Math.round(x_poss);
+  		Synth.FX.lfo2=Math.round(y_poss);
+  		//Synth.gain_nodes[samp].gain.value=1.0-(Synth.FX.gain[samp]/100);
+  		//sc.lfo_stretch = Math.round(x_poss);
+      _S.onModFrequency( Math.round(102-x_poss) )
+      _S.onFilterMod( Math.round(y_poss*2) )
+  	}
+  	else if (Synth.effect_selected=='arp') {
+  		sc.arpnote = Math.round(x_poss/13.5);
+  		sc.x_pos = sc.arpnote+1;
+  		sc.arp[sc.arpnote]=200-y_poss*2;
+  		sc.y_pos=Math.round(y_poss/12.5);
+      ///Synth.FX.pan[samp]=Math.round(x_poss);
+  		//Synth.FX.crush[samp] = Math.round(y_poss);
+      //var pan=Synth.FX.pan[samp]/100.0;
+      //var z = 1 - Math.abs(pan);
+      //Synth.pan_nodes[samp].setPosition(pan,0,z);
+      //shufflePanNodesS(samp);
+      //shuffleCrushNodesS(samp);
+      //disconnect pan nodes if inactive...?
+  	}
+  	else if (Synth.effect_selected=='ah') {
+  		xgo = Math.round(x_poss/25+1);
+  		sc.ah_x=xgo-1;
+      if(xgo==4){xgo=3};
+      if(xgo==5){xgo=4};
+  		ygo=Math.round(y_poss/50);
+  		sc.ah_y=ygo;
+      if(ygo==2){
+        ygo=-1;
+        sc.$.ahsvg.childNodes[1].setAttribute('y1','10');
+        sc.$.ahsvg.childNodes[1].setAttribute('y2','10');
+      }
+      else{
+        sc.$.ahsvg.childNodes[1].setAttribute('y1','194');
+        sc.$.ahsvg.childNodes[1].setAttribute('y2','194');
+      }
+      sc.x_pos=xgo;
+      sc.y_pos=ygo;
+      sc.ahShuffle(xgo,ygo);
+      sc.ahColors(true);
+      Synth.FX.ah1=Math.round(x_poss);
+  		Synth.FX.ah2= Math.round(y_poss);
+      //shuffleDelayNodesS(samp);
+      //Synth.delay_nodes[samp].delayTime.value = Math.abs(Synth.FX.delay_time[samp])/100.0;
+      //Synth.delay_fb_nodes[samp].gain.value= (Synth.FX.delay_fb[samp]/100.0)-0.1;
+
+      //_S.noteOff(this.last_note_played4);
+  	}
+    else if (Synth.effect_selected=='adsr') {
+      sc.x_pos = Math.round(x_poss);
+      sc.y_pos = Math.round(y_poss);
+      sc.decay = sc.x_pos;
+      sc.attack = sc.y_pos;
+      sc.adsrupdate(sc);
+      //points="0,200 {{attack}},3 {{attack+25}},{{203-(sustain*2)}} {{blahblah-decay*2}},{{203-(sustain*2)}} 300,200"
+      //console.log('attack: ',sc.attack,'decay: ',sc.decay)
+      _S.onEnvA(Math.round(sc.attack/10));
+      _S.onEnvR(sc.decay+1);
+      until_synth_noteoff_setting=Math.round(sc.attack/25) * -1;
+      _S.onFilterEnvA(Math.round(sc.attack/10));
+      _S.onFilterEnvR(sc.decay+1);
+      Synth.FX.adsr1=Math.round(x_poss);
+      Synth.FX.adsr2= Math.round(y_poss);
+    }
+    else if (Synth.effect_selected=='osc1') {
+      var waveform = Math.round(x_poss/33);
+      var string = 'hi';
+      var wavestring = 'hi';
+      if (waveform==0) {string='tri'; wavestring='triangle';}
+      else if (waveform==1) {string='sqr'; wavestring='square';}
+      else if (waveform==2) {string='saw'; wavestring='sawtooth';}
+      else if (waveform==3) {string='sin'; wavestring='sine';}
+      sc.x_pos = string;
+      sc.y_pos = Math.round(y_poss);
+      _S.onOsc1Wave(wavestring);
+      _S.onOsc1Mix(100-sc.y_pos);
+      Synth.FX.osc1wave=Math.round(x_poss);
+      Synth.FX.osc1fade=sc.y_pos;
+    }
+    else if (Synth.effect_selected=='osc2') {
+      var waveform = Math.round(x_poss/33);
+      var string = 'hi';
+      var wavestring = 'hi';
+      if (waveform==0) {string='tri'; wavestring='triangle';}
+      else if (waveform==1) {string='sqr'; wavestring='square';}
+      else if (waveform==2) {string='saw'; wavestring='sawtooth';}
+      else if (waveform==3) {string='sin'; wavestring='sine';}
+      sc.x_pos = string;
+      sc.y_pos = Math.round(y_poss);
+      _S.onOsc2Wave(wavestring);
+      _S.onOsc2Mix(100-sc.y_pos);
+      Synth.FX.osc2wave=Math.round(x_poss);
+      Synth.FX.osc2fade=sc.y_pos;
+    }
+
+  	//sc.play_samp(samp);
+  	sc.play_note();
+  	//sc.is_anim=false;
+  },//end getClickPosition
+
+  /*set_osc1waveform: function() {
+  	window._S.onOsc1Wave('sawtooth');
+  	console.log('hi set waveform osc1')
+  },*/
+
+  
+  lfo_height: 0,
+  lfo_stretchChanged: function() {
+    //console.log('lfo_stretchChanged',this.lfo_stretch,this.lfo_height, this.xyheight)
+    //'this' is sc
+  	if (this.lfo_stretch<this.xywidth/6) {
+  		this.lfo_stretch=this.xywidth/6
+  	}
+    this.lfostyle="width:"+(this.lfo_stretch*6)+"px;height:"+this.lfo_height+"px;margin-top:"+(this.xyheight-this.lfo_height)+"px;";
+    //this.$.lfosvg.style.width=(this.lfo_stretch*6)+'px';
+  },
+  
+  arp_selected: 1,
+  ah_selected: 1,
+  adsr_selected: 1,
+  osc1_selected: 4,
+  osc2_selected: 4,
+  ah_x: 1,
+  ah_y: 0,
+  //arp is a list of y-coordinates for the arp dots
+  arp: [0,0,0,0,0,0,0,0],
+  arpnote: 0,
+  arpChanged: function() {
+  	//Synth.MOD.arp=this.arp;
+  	this.arp_color[this.arpnote]=color_arrayS[this.y_pos];
+   },
+  arp_color: ['#bbc','#bbc','#bbc','#bbc','#bbc','#bbc','#bbc','#bbc'],
+
+  ahcolor: "rgb(226, 100, 137)",
+  ahcolor2: "black",
+
+  ahinterval: 0,
+
+  decay: 0,
+  attack: 0,
+  sustain: 100,
+  blahblah: 290,
+
+  ahShuffle: function(x,y) {
+    var ahline1 = this.$.ahline1;
+    var ahline2 = this.$.ahline2;
+    var ahline3 = this.$.ahline3;
+    if(x==1){
+      ahline1.style.display="none";
+      ahline2.style.display="none";
+      ahline3.style.display="none";
+    }
+    else if(x==2){
+      ahline1.style.display="block";
+      ahline2.style.display="none";
+      ahline3.style.display="none";
+    }
+    else if(x==3 || x==3.1){
+      ahline1.style.display="block";
+      ahline2.style.display="block";
+      ahline3.style.display="none";
+    }
+    else if(x==4){
+      ahline1.style.display="block";
+      ahline2.style.display="block";
+      ahline3.style.display="block";
+    }
+  },
+
+  
+  x_posChanged: function() {
+  		var svgthing = this.$.fxxpolyline;
+  		if (this.x_pos<0) {
+  			svgthing.setAttribute("points","45.63,20.375 0.375,58.087 45.63,95.8");
+  		}
+  		else {svgthing.setAttribute("points","0.375,20.375 45.63,58.087 0.375,95.8");}
+  },
+  y_posChanged: function() {
+  },
+
+  fxui1_click: function() {
+    //click the name of the effect to turn it off
+ 		//var sc = document.getElementById('synth-card');
+    var thing=sc.$.thingS;
+    	sc.x_pos = 0;
+    	thing.style.transition='left .2s ease-in, top .2s ease-in';
+      if (Synth.effect_selected=='lfo') {
+      	sc.lfo_stretch = 0;
+        Synth.FX.lfo1=0;
+        _S.onModFrequency(102);
+      }
+      else if (Synth.effect_selected=='arp') {
+      	sc.y_pos=0;
+      	sc.arp[sc.arpnote]=200;
+      }
+      else if (Synth.effect_selected=='ah') {
+        Synth.FX.ah1=0;
+        sc.ah_x=0;
+        sc.ahShuffle(1,sc.ah_y);
+        sc.ahColors(true);
+      }
+      else if (Synth.effect_selected=='adsr') {
+        Synth.FX.adsr1=0;
+        _S.onEnvA(5);
+        until_synth_noteoff_setting=0;
+        _S.onFilterEnvA(5);
+      }
+      else if (Synth.effect_selected=='osc1') {
+        Synth.FX.osc1wave=0;
+        _S.onOsc1Wave('triangle');
+      }
+      else if (Synth.effect_selected=='osc2') {
+        Synth.FX.osc2wave=0;
+        _S.onOsc2Wave('triangle');
+      }
+      thing.style.left=scaleToXS(0)+'px';
+  },
+  fxui2_click: function() {
+ 		//var sc = document.getElementById('synth-card');
+    var thing=sc.$.thingS;
+    var samp = sc.mode_selected+1;
+    	sc.y_pos = 0;
+
+      if (Synth.effect_selected=='lfo') {
+        sc.lfo_height = 0;
+        Synth.FX.lfo2 =0;
+        _S.onFilterMod( 0 );
+        sc.lfo_stretchChanged();
+      }
+      else if (Synth.effect_selected=='arp') {
+      	for (var i=0; i<9; i++) {
+    		sc.arp[i]=200;
+    		sc.arp_color[i]="#bbc";
+    	   };
+      }
+      else if (Synth.effect_selected=='ah') {
+        Synth.FX.ah2 = 0;
+        sc.ah_y=0;
+        sc.ahColors(false);
+        sc.$.ahsvg.childNodes[1].setAttribute('y1','194');
+        sc.$.ahsvg.childNodes[1].setAttribute('y2','194');
+      }
+      else if (Synth.effect_selected=='adsr') {
+        Synth.FX.adsr2=0;
+        _S.onEnvR(10);
+        _S.onFilterEnvR(10);
+      }
+      else if (Synth.effect_selected=='osc1') {
+        Synth.FX.osc1fade=0;
+        _S.onOsc1Mix(100);
+      }
+      else if (Synth.effect_selected=='osc2') {
+        Synth.FX.osc2fade=0;
+        _S.onOsc2Mix(100);
+      }
+      thing.style.transition='left .2s ease-in, top .2s ease-in';
+      thing.style.top=scaleToYS(0)+'px';
+  },
+
+    
+});//end Polymer
+
+
+
+</script>
+
+</dom-module>

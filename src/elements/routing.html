@@ -1,0 +1,98 @@
+<script src="../bower_components/page/page.js"></script>
+<script>
+  window.addEventListener('WebComponentsReady', function() {
+
+    // We use Page.js for routing. This is a Micro
+    // client-side router inspired by the Express router
+    // More info: https://visionmedia.github.io/page.js/
+
+    // Removes end / from app.baseUrl which page.base requires for production
+    if (window.location.port === '') {  // if production
+      page.base(app.baseUrl.replace(/\/$/, ''));
+    }
+
+    // Middleware
+    function scrollToTop(ctx, next) {
+      app.scrollPageToTop();
+      next();
+    }
+
+    function closeDrawer(ctx, next) {
+      app.closeDrawer();
+      next();
+    }
+
+    // Routes
+    page('*', scrollToTop, closeDrawer, function(ctx, next) {
+      next();
+    });
+
+    page('/:x', function(data) {
+      var d=data.params.x
+      var count=0;
+      var dyna = function(d) {
+        if(bufferListy) {
+          if (d==1 || d==2 || d==3) {
+            document.getElementById('cc').$['loader'+d].load()
+          }
+          else{
+            var plusser = String(d).split("__")
+            if(plusser.length>0 && d.length>27){
+              app.Firebase = new Firebase("https://beatpush.firebaseio.com/users")
+              //var id = plusser[0].split(":")
+              //var uid = id[id.length-1]
+              var uid = plusser[0]
+              var setname = plusser[1]
+              app.Firebase.child(uid).child("sets").child(setname).once("value", function(data) {
+                app.$.appcard.$.cc.loadData(data.val());
+              });
+            }
+          }
+        } else {
+          window.setTimeout(function(){
+            if(count<90){
+              dyna(d)
+            }
+            count++
+          },500) //load audio for 45 seconds, then give up
+        }
+      }
+      dyna(d)
+      //app.route = 'hi';
+      
+    });
+
+    
+
+    /*page(app.baseUrl, function() {
+      app.route = 'home';
+    });
+
+    page('/users', function() {
+      app.route = 'users';
+    });
+
+    page('/users/:name', function(data) {
+      app.route = 'user-info';
+      app.params = data.params;
+    });
+
+    page('/contact', function() {
+      app.route = 'contact';
+    });*/
+
+    // 404
+    page('*', function() {
+      /*app.$.toast.text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';
+      app.$.toast.show();*/
+      //page.redirect(app.baseUrl);
+      app.route = '';
+    });
+
+    // add #! before urls
+    page({
+      hashbang: true
+    });
+
+  });
+</script>

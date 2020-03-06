@@ -1,0 +1,584 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+<dom-module id="collection-card">
+<style>
+  :host{
+      text-align: center;
+      --paper-toggle-button-checked-button-color:#FF0000;
+      --paper-toggle-button-checked-bar-color:#FF0000;
+      --paper-toggle-button-checked-ink-color:#FF0000;
+     }
+	   #title{
+       margin-bottom:18px;
+       text-align: center;     
+     }
+
+    #trasher {
+      margin-left: 8px;
+      display: inline-block;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
+    #deleter{
+      width:320px;
+      text-align: right;
+      margin-bottom: 22px;
+    }
+
+    #OWdialog{
+
+    }
+
+  </style>
+
+<template>
+
+	<strong hidden$="{{hideTitle(uid)}}" id="title">[[_title(userName)]]</strong>
+  
+      <template is="dom-repeat"
+              items="{{sets}}"
+              as="sett"
+              filter="{{_computeFilter(filterBy)}}"
+              observe="isComplete"
+              >
+          <loader-item sett="{{sett}}" deleteoff="{{deleteoff}}" on-loader="load" on-delete="delete" class="horizontal layout" index="{{index}}" uid="{{uid}}"></loader-item>
+      </template>
+
+      <div id="deleter" hidden$="{{deleterhidden}}">
+        <span>Delete:</span><paper-toggle-button id="trasher" on-change="delete_on"></paper-toggle-button>
+      </div>
+
+  <strong id="title2">Example Beats</strong>
+
+    <loader-example id="loader1" name="1" on-loader="loadExample" class="horizontal layout"></loader-example>
+    <loader-example id="loader2" name="2" on-loader="loadExample" class="horizontal layout"></loader-example>
+    <loader-example id="loader3" name="3" on-loader="loadExample" class="horizontal layout"></loader-example>
+
+
+      <iron-ajax id="ajax"
+        auto
+        url="{{url}}"
+        handle-as="arraybuffer"
+        last-response="{{r}}"
+      ></iron-ajax>
+
+      <iron-ajax id="exampleAjax"
+        auto
+        url="{{exampleurl}}"
+        handle-as="json"
+        last-response="{{example}}"
+      ></iron-ajax>
+      
+
+</template>
+
+
+<script>
+Polymer({
+
+  is: 'collection-card',
+
+  properties: {
+      uid: {
+        type: String,
+        observer: 'uidChange'
+      },
+
+        sets: {
+          type: Array,
+          notify: true,
+          observer:'setsChange'
+        },
+
+
+        _firebaseConnected: {
+          value: false
+        },
+
+        location: {
+          type:String,
+          value: "https://beatpush.firebaseio.com"
+        },
+
+        filterBy: {
+          type: String,
+          value: 'all'
+        },
+
+        r: {
+          type: Object,
+          observer: 'rChange'
+        },
+
+        example: {
+          type: Object,
+          observer: 'exampleChange'
+        }
+
+  },
+
+  /* UI FUNCTIONS */
+
+    ready: function() {
+      this._ref=null
+      this.url=null
+      this.deleteoff=true
+      this.deleterhidden=true
+      this.exampleurl=null
+    },
+
+    exampleChange: function() {
+      this.loadData(this.example)
+    },
+
+    loadExample: function(e) {
+      this.exampleurl="https://rawgit.com/Evanfeenstra/examplebeats/master/"+e.detail+".json"
+    },
+
+   _title: function(userName){
+   	 return userName+"'s Beats"
+   },
+
+   hideTitle: function(uid) {
+      return uid ? false : true
+   },
+
+   setsChange: function(e) {
+    if(this.sets){
+      this.deleterhidden=false
+    }
+    else{
+      this.deleterhidden=true
+      this.deleteoff=true
+      this.$.trasher.checked=false
+    }
+   },
+
+   delete_on: function() {
+      if(this.$.trasher.checked==true) {
+        this.deleteoff=false
+      }
+      else {
+        this.deleteoff=true
+      }
+    },
+
+    /* DATABASE FUNCTIONS */
+
+   save: function(e) {
+    if(this.sets){
+      this.push("sets",e.detail)
+    }
+    else{
+      this.set("sets",[e.detail]) //FIRST SET
+    }
+
+    console.log("Firebase: rewrite _ array")
+    this._ref.child("_").set( //rewrite array of sets
+        this.sets
+      );
+
+    
+    this.saveData(e.detail); //writes to _ref.child("sets")
+
+   },
+
+   overwrite: function(e) {
+    this.saveData(e.detail);
+   },
+
+   delete: function(e) {
+    console.log("Firebase: Delete set")
+    this._ref.child("sets").child(e.detail.name).remove();
+    this.splice("sets",e.detail.index,e.detail.index+1)
+
+    console.log("Firebase: delete and rewrite _ array")
+    this._ref.child("_").set(
+        this.sets
+      );
+
+   },
+
+    load: function(e) {
+
+      var that = this;
+      console.log("Firebase: read set once")
+      this._ref.child("sets").child(e.detail).once("value", function(data) {
+        that.loadData(data.val());
+      });
+
+      Main.tabs.selected=0;
+      Main.pages.select(0);
+
+    },
+
+     // Setup user ref in firebase if auth succeeds
+      uidChange: function(uid) {
+        if (uid) {
+          var that = this;
+          this.userLocation = [this.location, 'users', uid].join('/');
+          this._ref = new Firebase(this.userLocation)
+          this._ref.child("_").on("value",function(snapshot) {
+            that.set("sets",snapshot.val())
+            console.log("Firebase: real-time value of _ array", snapshot.val())
+          })
+        }
+        else {
+          this.userLocation = null;
+          this.sets=null
+        }
+      },
+
+      _computeFilter: function(filterBy) {
+        if (filterBy) {
+
+          // If filterBy is 'all', return a filter that always returns
+          // the todo
+          if (filterBy === 'all') {
+            return function(item) {
+              return true;
+            };
+          }
+
+        }
+      },
+
+
+      /* LOADING AND SAVING FUNCTIONS */
+
+        loadFXSettings: function(bc) {
+          for (i=1; i<9; i++) {
+            Beats.gain_nodes[i].gain.value=1.0-(Beats.FX.gain[i]/100);
+            var pan=Beats.FX.pan[i]/100.0;
+                var z = 1 - Math.abs(pan);
+                Beats.pan_nodes[i].setPosition(pan,0,z);
+                Beats.delay_nodes[i].delayTime.value = Math.abs(Beats.FX.delay_time[i])/100.0;
+                Beats.delay_fb_nodes[i].gain.value= (Beats.FX.delay_fb[i]/100.0)-0.1;
+                shuffleCrushNodes(i);
+                shuffleDelayNodes(i);
+                shufflePanNodes(i);
+          }
+          
+          bc.sample_selectedChanged();
+        },
+
+
+      loadData: function(r) {
+
+          Main.tabs.selected=0;
+          //var bc = document.getElementById('beat-card');
+          //var sc = document.getElementById('synth-card');
+          var tbc = document.getElementById('topbar');
+
+          sc.stop_note();
+
+            Beats.beats_array = r.Beats.b_a;
+            Beats.beats_array2 = r.Beats.b_a2;
+              bc.filter_cutoff = r.Beats.f_c;
+              bc.$.filterslider.value=r.Beats.f_c;
+              bc.reverb_setting = r.Beats.r_s;
+              bc.$.verbslider.value=r.Beats.r_s;
+              Beats.reverb_on = r.Beats.r_o;
+              bc.compressor_setting = r.Beats.c_s;
+              bc.$.cslider.value=r.Beats.c_s;
+              Beats.FX.pitch = r.Beats.FX.pi;
+              Beats.FX.gain = r.Beats.FX.g;
+              Beats.FX.crush = r.Beats.FX.c;
+              Beats.FX.pan = r.Beats.FX.pa;
+              Beats.FX.delay_fb = r.Beats.FX.d_f;
+              Beats.FX.delay_time = r.Beats.FX.d_t;
+              Beats.is_animating_pitch = r.Beats.is_a_pi;
+              Beats.is_animating_pan = r.Beats.is_a_pa;
+              Beats.is_animating_feedback = r.Beats.is_a_f;
+
+              Beats.reverb_dropdown_selected = r.Beats.r_d_s;
+              bc.$.reverbselect.selectedIndex=Beats.reverb_dropdown_selected;
+              reverbDropChange(Beats.reverb_dropdown_selected);
+
+              Beats.filter_dropdown_selected = r.Beats.f_d_s;
+              bc.$.filter_dd.selectedIndex=Beats.filter_dropdown_selected;
+              filterDropChange(Beats.filter_dropdown_selected);
+
+              Beats.compressor_dropdown_selected = r.Beats.c_d_s;
+              bc.$.compressor_dd.selectedIndex=Beats.compressor_dropdown_selected;
+              compressorDropChange(Beats.compressor_dropdown_selected);
+
+              this.loadFXSettings(bc);
+
+              for (var i=0; i<32; i++) {
+                if (Beats.beats_array2[i]==0) {
+                  Beats.id_yo[i].style.background = color_array[Beats.beats_array[i]];
+                }
+                else {
+                  Beats.id_yo[i].style.background = "-webkit-linear-gradient(left top, "+color_array[Beats.beats_array[i]]+' 48%, '+color_array[Beats.beats_array2[i]]+" 52%)";
+                  Beats.id_yo[i].style.background = "linear-gradient(to bottom right, "+color_array[Beats.beats_array[i]]+' 48%, '+color_array[Beats.beats_array2[i]]+" 52%)";
+                }
+              }
+
+              //SYNTH//
+              Synth.synth_array = r.Synth.s_a;
+              sc.filter_cutoff = r.Synth.f_c;
+              sc.$.fsliderS.value=r.Synth.f_c;
+              sc.reverb_setting = r.Synth.r_s;
+              sc.$.verbsliderS=r.Synth.r_s;
+              Synth.reverb_on = r.Synth.r_o;
+              sc.scale_setting = r.Synth.s_s;
+              sc.$.scaleslider.value=r.Synth.s_s;
+
+              Synth.FX.lfo2 = r.Synth.FX.l2;
+              _S.onFilterMod( Math.round(Synth.FX.lfo2*2) )
+              //sc.lfo_height = Synth.FX.lfo2 * (sc.xyheight / 100);
+              Synth.FX.lfo1 = r.Synth.FX.l1;
+              //_S.onModFrequency( Math.round((100-Synth.FX.lfo1)/3.8) )
+              _S.onModFrequency( Math.round(102-Synth.FX.lfo1) )
+              //sc.lfo_stretch = Synth.FX.lfo1 * (sc.xywidth / 100);
+              //if (Synth.effect_selected!='lfo') {
+              //  sc.$.lfosvg.style.display = "none"; //not working
+              //}
+              
+              sc.lfo_selected=r.Synth.MOD.lfo_s;
+              sc.adsr_selected=r.Synth.MOD.adsr_s;
+              sc.ah_selected=r.Synth.MOD.ah_s;
+              sc.osc1_selected=r.Synth.MOD.osc1_s;
+              sc.osc2_selected=r.Synth.MOD.osc2_s;
+
+
+              Synth.FX.ah1 = r.Synth.FX.ah1;
+              Synth.MOD.ah = r.Synth.MOD.ah;
+              Synth.FX.ah2 = r.Synth.FX.ah2;
+                  var xgo = Math.round(Synth.FX.ah1/25+1);
+                  sc.ah_x=xgo-1;
+                  if(xgo==4){xgo=3};
+                  if(xgo==5){xgo=4};
+                  var ygo=Math.round(Synth.FX.ah2/50);
+                  sc.ah_y=ygo;
+                  if(ygo==2){
+                    ygo=-1;
+                    sc.$.ahsvg.childNodes[1].setAttribute('y1','10');
+                    sc.$.ahsvg.childNodes[1].setAttribute('y2','10');
+                  }
+                  else{
+                    sc.$.ahsvg.childNodes[1].setAttribute('y1','194');
+                    sc.$.ahsvg.childNodes[1].setAttribute('y2','194');
+                  }
+                  //sc.x_pos=xgo;
+                  //sc.y_pos=ygo;
+                  sc.ahShuffle(xgo,ygo);
+                  sc.ahColors();
+                    
+
+              Synth.FX.adsr1 = r.Synth.FX.ad1+1; //add one so never 0 decay
+              Synth.FX.adsr2 = r.Synth.FX.ad2;
+                  //sc.x_pos = Synth.FX.adsr1;
+                  //sc.y_pos = Synth.FX.adsr2;
+                  sc.decay = Synth.FX.adsr1; 
+                  sc.attack = Synth.FX.adsr2;
+                  sc.adsrupdate(sc);
+                  _S.onEnvA(Math.round(Synth.FX.adsr2/10));
+                  _S.onEnvR(Synth.FX.adsr1);
+                  until_synth_noteoff_setting=Math.round(Synth.FX.adsr2/25) * -1;
+                  _S.onFilterEnvA(Math.round(Synth.FX.adsr2/10));
+                  _S.onFilterEnvR(Synth.FX.adsr1);
+                  //mode_selected
+                  if(sc.adsr_selected==1){sc.sustain=100;sc.blahblah=290;until_synth_on=true;}
+                  else if(sc.adsr_selected==2){sc.sustain=60;sc.blahblah=290;until_synth_on=true;}
+                  else if(sc.adsr_selected==3){sc.sustain=20;sc.blahblah=290;until_synth_on=true;}
+                  else if(sc.adsr_selected==4){sc.sustain=100;sc.blahblah=500;until_synth_on=false;}
+                  else if(sc.adsr_selected==5){sc.sustain=60;sc.blahblah=500;until_synth_on=false;}
+                  else if(sc.adsr_selected==6){sc.sustain=20;sc.blahblah=500;until_synth_on=false;} 
+                  _S.onEnvS(sc.sustain);
+                  _S.onFilterEnvS(sc.sustain);
+
+
+              Synth.FX.osc1wave = r.Synth.FX.o1w;
+              Synth.FX.osc1fade = r.Synth.FX.o1f;
+                  var waveform1 = Math.round(Synth.FX.osc1wave/33);
+                  var wavestring1 = 'hi';
+                  if (waveform1==0) {wavestring1='triangle';}
+                  else if (waveform1==1) {wavestring1='square';}
+                  else if (waveform1==2) {wavestring1='sawtooth';}
+                  else if (waveform1==3) {wavestring1='sine';}
+                  _S.onOsc1Wave(wavestring1);
+                  //_S.onOsc1Wave('sawtooth');
+                  //sc.set_osc1waveform();
+                  _S.onOsc1Mix(100-Synth.FX.osc1fade);
+         
+              Synth.FX.osc2wave = r.Synth.FX.o2w;
+              Synth.FX.osc2fade = r.Synth.FX.o2f;
+                  var waveform2 = Math.round(Synth.FX.osc2wave/33);
+                  var wavestring2 = 'hi';
+                  if (waveform2==0) {wavestring2='triangle';}
+                  else if (waveform2==1) {wavestring2='square';}
+                  else if (waveform2==2) {wavestring2='sawtooth';}
+                  else if (waveform2==3) {wavestring2='sine';}
+                  _S.onOsc2Wave(wavestring2);
+                  _S.onOsc2Mix(100-Synth.FX.osc2fade);
+
+              Synth.spotOctave=r.Synth.sO;
+
+              Synth.reverb_dropdown_selected = r.Synth.r_d_s;
+              sc.$.reverbselectS.selectedIndex=Synth.reverb_dropdown_selected;
+              reverbdropChangeS(Synth.reverb_dropdown_selected);
+
+              Synth.scale_dropdown_selected = r.Synth.s_d_s;
+              sc.$.scaledropdown.selectedIndex=Synth.scale_dropdown_selected;
+              scaledropChangeS(Synth.scale_dropdown_selected);
+
+              //sc.mode_selectedChanged();
+
+
+              for (var i=0; i<32; i++) {
+                  Synth.id_yo[i].style.background = color_arrayS[Synth.synth_array[i]];
+              }
+
+              tbc.bpm_yo=r.Beats.bpm;
+              Beats.masterUrls=r.Beats.mU;
+              Beats.masterUrlNames=r.Beats.muN;
+
+              this.loadUrls(-1);
+
+              //Synth/Drum master mix
+              Beats.mix=r.Beats.m;
+              tbc.$.mixslider.value=Beats.mix;
+              tbc.$.mixslider.immediateValue=Beats.mix;
+
+              //back to kit pages, to avoid glitches in mod thing
+              bc.$.innertabs.selected=0;
+              bc.$.innerpages.selected=0;
+              sc.$.innertabsS.selected=0;
+              sc.$.innerpagesS.selected=0;
+
+       }, // end loadData
+
+       loadUrls: function(x) {
+        for (var i=x+1; i<8; i++) {
+          if (Beats.masterUrls[i]) {
+            
+            this.soundNumHolder=i
+            this.url=Beats.masterUrls[i]
+            break;
+
+          }//end if 
+          else{ //this is to reload default sound names
+
+            bufferListy[i]=bufferLoader.bufferList[i];
+            var stringythingy='name'+String(i+1);
+            bc[stringythingy]=String(Beats.masterUrlNames[i]);
+          }
+        }//end for loop for samples
+       },
+
+       rChange: function() {
+
+          var that = this;
+          Audiocontext.decodeAudioData(
+            that.r,
+            function(buffer) {
+                      // success callback, the argument is the audio buffer
+                      if (!buffer) {
+                          alert('error decoding file data');
+                          return;
+                      }
+                      bufferListy[that.soundNumHolder]=buffer
+                      var stringythingy='name'+String(that.soundNumHolder+1);
+                      bc[stringythingy]=String(Beats.masterUrlNames[that.soundNumHolder]);
+                      that.loadUrls(that.soundNumHolder) //start loop again, from where it left off
+                      
+                  },
+                  function(error) { //error callback
+                      console.log('errorrr,', error)
+                  }
+          );//end decodeAudioData
+
+       },
+    
+    saveData: function(name) {
+
+      var tbc = document.getElementById('topbar');
+
+      var saver = {
+
+        Beats: {
+
+            b_a : Beats.beats_array,
+            b_a2 : Beats.beats_array2,
+            f_c : bc.filter_cutoff,
+            r_s : bc.reverb_setting,
+            r_o : Beats.reverb_on,
+            c_s : bc.compressor_setting,
+            FX: {
+              pi : Beats.FX.pitch,
+              g : Beats.FX.gain,
+              c : Beats.FX.crush,
+              pa : Beats.FX.pan,
+              d_f : Beats.FX.delay_fb,
+              d_t : Beats.FX.delay_time
+            },
+            is_a_pi : Beats.is_animating_pitch,
+            is_a_pa : Beats.is_animating_pan,
+            is_a_f : Beats.is_animating_feedback,
+
+            r_d_s : Beats.reverb_dropdown_selected,
+            f_d_s : Beats.filter_dropdown_selected,
+            c_d_s : Beats.compressor_dropdown_selected,
+
+            bpm : tbc.bpm_yo,
+            mU : Beats.masterUrls,
+            muN : Beats.masterUrlNames,
+
+            m: Beats.mix
+
+          },
+
+        Synth: {
+
+            s_a : Synth.synth_array,
+            f_c : sc.filter_cutoff,
+            r_s : sc.reverb_setting,
+            r_o : Synth.reverb_on,
+            s_s : sc.scale_setting,
+
+            FX: {
+              l1 : Synth.FX.lfo1,
+              l2 : Synth.FX.lfo2,
+              ah1 : Synth.FX.ah1,
+              ah2 : Synth.FX.ah2,
+              ad1 : Synth.FX.adsr1,
+              ad2 : Synth.FX.adsr2,
+              o1w : Synth.FX.osc1wave,
+              o1f : Synth.FX.osc1fade,
+              o2w : Synth.FX.osc2wave,
+              o2f : Synth.FX.osc2fade
+            },
+
+            MOD: {
+              lfo_s : sc.lfo_selected,
+              adsr_s : sc.adsr_selected,
+              ah_s : sc.ah_selected,
+              osc1_s : sc.osc1_selected,
+              osc2_s : sc.osc2_selected,
+              ah : Synth.MOD.ah
+            },
+
+            sO : Synth.spotOctave,
+
+            r_d_s : Synth.reverb_dropdown_selected,
+            s_d_s : Synth.scale_dropdown_selected
+
+          }
+      }//end saver
+
+      console.log("Firebase: Write to set")
+      this._ref.child("sets").child(name).set(
+        saver
+      )
+    }, //end saveData
+
+        
+
+        
+});
+</script>
+</dom-module>

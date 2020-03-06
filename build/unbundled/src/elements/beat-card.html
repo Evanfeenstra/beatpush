@@ -1,0 +1,468 @@
+<html><head><link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+</head><body><dom-module id="beat-card">
+<style>
+:host {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      font-size: 2em;
+      font-weight: 300;
+      --paper-toggle-button-checked-button-color:#FFFF00;
+      --paper-toggle-button-checked-bar-color:#FFFF00;
+      --paper-toggle-button-checked-ink-color:#FFFF00;
+      background-color: #E5E5E5;
+    }
+
+    ul {
+      padding: 0;
+      list-style-type: none;
+      margin: 0 0;
+    }
+    paper-slider{
+      max-width:91%;
+    }
+    #beat_container {
+      height: 100% !important;
+      width: 100%;
+    }
+    .hundo {
+      width: 100%;
+      height: 100% !important;
+    }
+    .drumkit_container {
+      background-color: rgba(228,228,228,0.7);
+      width:100%;
+      height: 100% !important;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none; 
+      -moz-user-select: none; 
+      -ms-user-select: none; 
+      -o-user-select: none; 
+      user-select: none;
+    }
+    #innertabs{
+     background-color: rgba(34,34,34,0.5);
+     /*height: 1.75rem;
+     width: 14rem;*/
+     width: 100%;
+     color: white;
+     font-size: .5em;
+     height: 15%;
+   }
+   #tabsamples #t1{
+      background-color: rgba(92, 107, 192, 0.8);
+   }
+   #tabsamples #t2{
+      background-color: rgba(255, 152, 0, 0.8);
+   }
+   #tabsamples #t3{
+      background-color: rgba(76, 175, 80, 0.8);
+   }
+   #tabsamples #t4{
+      background-color: rgba(33, 150, 243, 0.8);
+   }
+   #tabsamples #t5{
+      background-color: rgba(158, 224, 3, 0.8);
+   }
+   #tabsamples #t6{
+      background-color: rgba(171, 71, 188, 0.8);
+   }
+   #tabsamples #t7{
+      background-color: rgba(239, 83, 80, 0.8);
+   }
+   #tabsamples #t8{
+      background-color: rgba(141, 110, 99, 0.8);
+   }
+   #tabsamples {
+    height: 100%;
+   }
+
+   .spanny {
+    font-size: 0.5em;
+    padding: 0 10% 0 6%;
+    min-height: 0;
+  }
+ .fx .spanny {
+  height: 0px;
+  }
+  .sliders{
+    padding: 13% 10px 7px 10px;
+  }
+  .fx{
+    padding: 2px 8px 2px 8px;
+    width: 78%;
+  }
+  .downlabel {
+    max-width: 40%;
+  }
+  .dropdwn {
+    margin: 0px 0px;
+    -moz-appearance: none;
+    -webkit-appearance: none; 
+    appearance: none;
+    border-radius: 0px;
+    font-family: 'RobotoDraft', sans-serif;
+    font-size: 1em;
+    background-color: rgba(34,34,34,0.0);
+    border: 0px;
+    border-bottom: 1px solid #777;
+    padding-right:20%;
+    max-width: 100%;
+    overflow:hidden;
+    cursor: pointer; cursor: hand;
+  }
+  label {position:relative}
+  label:after {
+    content:'>';
+    font:1em 'RobotoDraft', monospace;
+    color:#777;
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform:rotate(90deg);
+    right:0px;
+    position:absolute;
+    pointer-events:none;
+  }
+  #sample_dropdwn {
+    margin-bottom: 8%;
+  }
+  #xy_bounder {
+    border: 5px solid;
+    border-color: rgb(92, 107, 192);
+    border-radius: 5px;
+  margin: 5% 0 4% 0;
+  height: 100%;
+  }
+  #xy {
+    border: 1px solid;
+    border-color: rgb(92, 107, 192);
+    background-color: rgba(34,34,34,0.4);
+    width: 100%;
+    height: 100%;
+    margin:0px;
+  }
+  #thing {
+    position: absolute;
+    /*top: 106px;*/
+    transition: left .2s ease-in, top .2s ease-in;
+    height: 10px;
+    width: 10px;
+    border: 5px solid;
+    border-color: rgb(92, 107, 192);
+    border-radius: 10px;
+    background-color: whitesmoke;
+  }
+  #fx_svg1 {
+    width:10%; 
+    min-width: 10px;
+    height:100%;
+  }
+  #fx_svg2 {
+    width: 20%;
+    min-width: 20px;
+    height: 100%;
+  }
+  #modspanny1{
+    margin:5% 0 0 0;
+   }
+   #modspanny2{
+    margin:-.7% 0 2% 0; 
+    padding-right:12px;
+   }
+ /*PHONES*/
+  @media (max-width: 399px), (max-height: 399px) {
+    #innertabs{
+     font-size: .3em;
+   }
+   .spanny {
+    font-size: .4em;
+   }
+   #modspanny1{
+    margin: 2% 0 2% 0;
+    padding: 0 0 0 6%;
+   }
+   #modspanny2{
+    margin: -2.7% 0 2% 0;
+   }
+   /*.sliders{
+      padding: 6px 10px 7px 10px;
+    }*/
+
+  }
+
+  #beat_row_1 {
+    width: 80%;
+    margin: auto;
+    background-color: #ccc;
+  }
+  #beat_row_3 {
+    width: 80%;
+    margin: auto;
+    background-color: #ccc;
+  }
+  #beat_row_2 {
+    background-color: #ccc;
+  }
+  #beat_row_4 {
+    background-color: #ccc;
+  }
+  .s{
+    background-color: #bbc;
+    outline: 1px solid #ccc;
+    opacity: 0.6;
+    cursor: default;
+    box-shadow: 2px 2px 10px #444;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    padding:0;
+    min-width:0;
+    min-height: 0;
+  }
+  .box {
+    overflow:hidden;
+    border-radius: 0px;
+    font-size: .75rem;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    margin:1px;
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.4);
+  }
+  #beat_central_container{
+    background: radial-gradient(#222,#eee); /* Standard syntax */
+    -webkit-touch-callout: none;
+      -webkit-user-select: none; 
+      -moz-user-select: none; 
+      -ms-user-select: none; 
+      -o-user-select: none; 
+      user-select: none;
+  }
+  #middle_container {
+    margin:10%;
+    height: 100%;
+  }
+  drag-avatar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: block;
+    pointer-events: none;
+  }
+  paper-button {
+    min-width: 4em;
+  }
+
+  
+
+</style>
+
+<template>
+
+<div class="vertical layout" id="beat_container">
+
+
+
+
+    <ul class="flex-1 layout horizontal" id="beat_row_1">
+      <div id="a" class="s"></div>
+      <div id="b" class="s"></div>
+      <div id="c" class="s"></div>
+      <div id="d" class="s"></div>
+      <div id="e" class="s"></div>
+      <div id="f" class="s"></div>
+      <div id="g" class="s"></div>
+      <div id="h" class="s"></div>
+    </ul>
+    <div class="layout horizontal flex-8" id="beat_inner_container">
+      <ul class="flex-1 layout vertical-reverse" id="beat_row_4">
+        <div id="y" class="s"></div>
+        <div id="z" class="s"></div>
+        <div id="za" class="s"></div>
+        <div id="zb" class="s"></div>
+        <div id="zc" class="s"></div>
+        <div id="zd" class="s"></div>
+        <div id="ze" class="s"></div>
+        <div id="zf" class="s"></div>
+      </ul>
+      <div class="layout center flex-8" id="beat_central_container">
+
+
+        <div class="vertical layout center" id="middle_container">
+          <paper-tabs class="horizontal layout" id="innertabs" selected="0">
+            <paper-tab class="flex" name="0" id="kittab">Kit</paper-tab>
+            <paper-tab class="flex" name="1" id="fxtab">FX</paper-tab>
+            <paper-tab class="flex" name="2" id="modtab">Mod</paper-tab>
+          </paper-tabs>
+
+          <neon-animated-pages id="innerpages" style="height:85%;width:100%" selected="0" entry-animation="fade-in-animation" exit-animation="scale-down-animation">
+
+          <neon-animatable class="hundo flex">
+            <div class="flex vertical layout drumkit_container" unselectable="on" onselectstart="return false;" touch-action="none">
+              
+              <div class="flex horizontal layout">
+                <paper-button class="box" id="firstbox" style="background-color: #5C6BC0" on-track="handleTrack" on-tap="play_samp1" onmousedown="return false;">{{name1}}</paper-button>
+                <paper-button class="box" style="background-color: #FF9800" on-track="handleTrack" on-tap="play_samp2">{{name2}}</paper-button>
+                <paper-button class="box" id="thirdbox" style="background-color: #4CAF50" on-track="handleTrack" on-tap="play_samp3">{{name3}}</paper-button>
+              </div>
+              <div class="flex horizontal layout">
+                <paper-button class="box" style="background-color: #2196F3" on-track="handleTrack" on-tap="play_samp4">{{name4}}</paper-button>
+                <paper-button class="box" style="background-color: #bbc" on-track="handleTrack">erase</paper-button>
+                <paper-button class="box" id="fifthbox" style="background-color: #9EE003" on-track="handleTrack" on-tap="play_samp5">{{name5}}</paper-button>
+              </div>
+              <div class="flex horizontal layout">
+                <paper-button class="box" style="background-color: #AB47BC" on-track="handleTrack" on-tap="play_samp6">{{name6}}</paper-button>
+                <paper-button class="box" id="seventhbox" style="background-color: #EF5350" on-track="handleTrack" on-tap="play_samp7">{{name7}}</paper-button>
+                <paper-button class="box" style="background-color: #8D6E63" on-track="handleTrack" on-tap="play_samp8">{{name8}}</paper-button>
+              </div>
+            </div>
+          </neon-animatable>
+        
+
+        <neon-animatable class="hundo flex">
+          <div class="vertical layout drumkit_container">
+          <div class="flex vertical layout around-justified sliders">
+
+          <div class="flex" style="min-height:0">
+           <div class="horizontal layout justified spanny"><span style="white-space: nowrap">Reverb: <b>{{reverb_setting}}</b></span>
+            <label class="downlabel"><select id="reverbselect" class="dropdwn" onchange="reverbDropChange(this.selectedIndex);">
+             <option>digital short</option>
+             <option>digital long</option>
+             <option>church</option>
+             <option>factory</option>
+             <option>hall</option>
+             <option>spring</option>
+             <option>bucket</option>
+             <option>djembe</option>
+             <option>echo</option>
+             <option>pot</option>
+             <option>telephone</option>
+             <option>vacuum</option>
+            </select></label>
+           </div>
+         <paper-slider pin="" value="30" on-immediate-value-change="REchange" on-value-change="REchange" id="verbslider"></paper-slider>
+         </div>
+            
+
+
+          <div class="flex" style="min-height:0">
+             <div class="horizontal layout justified spanny"><span style="white-space: nowrap">Filter: <b>{{filter_cutoff}}</b></span>
+              <label class="downlabel"><select id="filter_dd" class="dropdwn" onchange="filterDropChange(this.selectedIndex);">
+               <option selected="">lowpass</option>
+               <option>highpass</option>
+               <option>lowpass, Q</option>
+               <option>highpass, Q</option>
+               <option>lowpass, high Q</option>
+               <option>highpass, high Q</option>
+              </select></label>
+            </div>
+         <paper-slider pin="" value="100" on-immediate-value-change="FCchange" on-value-change="FCchange" id="filterslider"></paper-slider>
+         </div>
+        
+          <div class="flex" style="min-height:0">
+             <div class="horizontal layout justified spanny"><span style="white-space: nowrap">Compress: <b>{{compressor_setting}}</b></span>
+               <label class="downlabel"><select id="compressor_dd" class="dropdwn" onchange="compressorDropChange(this.selectedIndex);">
+                <option selected="">normal ratio</option>
+                <option>low ratio</option>
+                <option>high ratio</option>
+                <option>normal ratio, hard knee</option>
+                <option>low ratio, hard knee</option>
+                <option>high ratio, hard knee</option>
+               </select></label>
+             </div>
+             <paper-slider pin="" value="30" on-immediate-value-change="COchange" on-value-change="COchange" id="cslider"></paper-slider>
+            </div>
+
+       </div>
+      </div>
+     </neon-animatable>
+
+   <neon-animatable class="hundo flex">
+    
+      <div class="horizontal layout drumkit_container">
+
+       <div class="fx flex-6 vertical layout around-justified">
+        <div id="modspanny1" class="flex-1 horizontal layout justified spanny">
+                    
+        <label><select class="dropdwn" id="sample_dropdwn" onchange="effectDropChange(this.value);" name="type">
+           <option selected="" value="pf">pitch / fade</option>
+           <option value="pc">pan / crush</option>
+           <option value="d">delay</option>
+         </select></label>
+
+        <paper-toggle-button id="anim" class="anim" on-change="anim_click"></paper-toggle-button>
+        </div>
+
+       <div class="flex-8 vertical layout" id="xy_bounder">
+       <paper-button style="overflow:hidden" class="flex" on-up="getClickPosition" on-track="getClickPosition" onclick="return false;" id="xy">
+        <div id="thing" touch-action="none" onclick="return false;"></div>
+       </paper-button>
+       </div>
+
+       <div id="modspanny2" class="flex-1 horizontal layout around-justified spanny">
+          
+          <span style="white-space: nowrap" class="horizontal layout center">
+                <svg id="fx_svg1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 60 100" xml:space="preserve">
+              <polyline id="fxxpolyline" style="fill:none;stroke:black;stroke-width:6" stroke-linecap="round" stroke-linejoin="round" points="0.375,20.375 45.63,58.087 0.375,95.8 "></polyline></svg>
+          <span id="fx_ui1" on-tap="fxui1_click" style="cursor: pointer; cursor: hand; margin: 0 5px">Pitch: </span><b>{{x_pos}}</b></span>
+
+          <span style="white-space: nowrap" class="horizontal layout center">
+              <svg id="fx_svg2" viewBox="0 0 90 50" xml:space="preserve">
+              <polyline style="fill:none;stroke:black;stroke-width:4" stroke-linecap="round" stroke-linejoin="round" points="0.375,38.087 38.087,0.375 75.8,38.087 "></polyline></svg>
+          <span id="fx_ui2" on-tap="fxui2_click" style="cursor: pointer; cursor: hand; margin: 0 5px">Fade: </span><b>{{y_pos}}</b></span>
+
+       </div>
+
+       </div>
+       
+       <paper-vert-tabs align-left="" class="flex-1 vert self-end" id="tabsamples" selected="{{sample_selected}}">
+          <paper-tab id="t1" on-tap="play_samp1" name="1"></paper-tab>
+          <paper-tab id="t2" on-tap="play_samp2" name="2"></paper-tab>
+          <paper-tab id="t3" on-tap="play_samp3" name="3"></paper-tab>
+          <paper-tab id="t4" on-tap="play_samp4" name="4"></paper-tab>
+          <paper-tab id="t5" on-tap="play_samp5" name="5"></paper-tab>
+          <paper-tab id="t6" on-tap="play_samp6" name="6"></paper-tab>
+          <paper-tab id="t7" on-tap="play_samp7" name="7"></paper-tab>
+          <paper-tab id="t8" on-tap="play_samp8" name="8"></paper-tab>
+      </paper-vert-tabs>
+     </div>
+   </neon-animatable>
+
+</neon-animated-pages></div> 
+
+
+  </div>
+  <ul class="flex-1 layout vertical" id="beat_row_2">
+    <div id="i" class="s" draggable="true"></div>
+    <div id="j" class="s"></div>
+    <div id="k" class="s"></div>
+    <div id="l" class="s"></div>
+    <div id="m" class="s"></div>
+    <div id="n" class="s"></div>
+    <div id="o" class="s"></div>
+    <div id="p" class="s"></div>
+  </ul>
+</div>
+<ul class="flex-1 layout horizontal-reverse" id="beat_row_3">
+  <div id="q" class="s"></div>
+  <div id="r" class="s"></div>
+  <div id="s" class="s"></div>
+  <div id="t" class="s"></div>
+  <div id="u" class="s"></div>
+  <div id="v" class="s"></div>
+  <div id="w" class="s"></div>
+  <div id="x" class="s"></div>
+</ul>
+</div>
+
+</template>
+
+
+<script>Polymer({is:"beat-card",properties:{sample_selected:{type:Number,value:0,observer:"sample_selectedChanged"},filter_cutoff:{type:Number,value:100,observer:"filter_cutoffChanged"},reverb_setting:{type:Number,value:30,observer:"reverb_settingChanged"},compressor_setting:{type:Number,value:30,observer:"compressor_settingChanged"},x_pos:{type:Number,value:0,observer:"x_posChanged"},y_pos:{type:Number,value:0},name1:{type:String,value:"kick"},name2:{type:String,value:"snare"},name3:{type:String,value:"hihat"},name4:{type:String,value:"kick808"},name5:{type:String,value:"bells"},name6:{type:String,value:"jawharp"},name7:{type:String,value:"clap"},name8:{type:String,value:"clave"}},scaleToX:function(e){var t=this.xywidth/2,a=e/(100/t)+t-12;return a},scaleToY:function(e){var t=e*-1/(100/this.xyheight)+this.xyheight-10;return t},REchange:function(e){this.reverb_setting=e.target.immediateValue},FCchange:function(e){this.filter_cutoff=e.target.immediateValue},COchange:function(e){this.compressor_setting=e.target.immediateValue},sample_selectedChanged:function(){sample_selected=this.sample_selected+1;var e=this.$.xy;e.style.borderColor=color_array[sample_selected];var t=this.$.xy_bounder;t.style.borderColor=color_array[sample_selected];var a=this.$.thing;a.style.borderColor=color_array[sample_selected],a.style.transition="left 0s ease-in, top 0s ease-in",this.set_translate(a,0),"pf"==Beats.effect_selected&&(a.style.left=this.scaleToX(Beats.FX.pitch[sample_selected])+"px",a.style.top=this.scaleToY(Beats.FX.gain[sample_selected])+"px",this.x_pos=Beats.FX.pitch[sample_selected],this.y_pos=Beats.FX.gain[sample_selected]),"pc"==Beats.effect_selected&&(a.style.left=this.scaleToX(Beats.FX.pan[sample_selected])+"px",a.style.top=this.scaleToY(Beats.FX.crush[sample_selected])+"px",this.x_pos=Beats.FX.pan[sample_selected],this.y_pos=Beats.FX.crush[sample_selected]),"d"==Beats.effect_selected&&(a.style.left=this.scaleToX(Beats.FX.delay_fb[sample_selected])+"px",a.style.top=this.scaleToY(Beats.FX.delay_time[sample_selected])+"px",this.x_pos=Beats.FX.delay_fb[sample_selected],this.y_pos=Beats.FX.delay_time[sample_selected]),toggleThingYellow(sample_selected,Beats.effect_selected,a),toggleToggle(sample_selected,Beats.effect_selected,this)},compressor_settingChanged:function(){1==Main.ready&&(Beats.compressor_yo.threshold.value=0-this.compressor_setting,Beats.compressorSetting=this.compressor_setting)},filter_cutoffChanged:function(){if(1==Main.ready){var e=40,t=22050,a=Math.log(t/e)/Math.LN2,s=Math.pow(2,a*(this.filter_cutoff/100-1));Beats.filterCutoff=t*s,Beats.filter_yo.frequency.value=Beats.filterCutoff+1}},reverb_settingChanged:function(){1==Main.ready&&(0==this.reverb_setting&&1==Beats.reverb_on?(Beats.wetGainNode.disconnect(),Beats.reverb_on=!1):0!=this.reverb_setting&&1==Beats.reverb_on||(Beats.wetGainNode.connect(Beats.convolver_yo),Beats.reverb_on=!0),Beats.reverbSetting=this.reverb_setting,Beats.dryGainNode.gain.value=1-Beats.reverbSetting/100,Beats.wetGainNode.gain.value=Beats.reverbSetting/100)},set_translate:function(e,t){e.style["-webkit-transform"]="translate("+t+"px,0px)",e.style["-moz-transform"]="translate("+t+"px,-0px)",e.style["-ms-transform"]="translate("+t+"px,-0px)",e.style["-o-transform"]="translate("+t+"px,0px)",e.style.transform="translate("+t+"px,-0px)"},sample_pitch:{type:Number,value:50},sample_pitch_proxy:{type:Number,value:50},sample_level:{type:Number,value:50},sample_level_proxy:{type:Number,value:50},ready:function(){function e(){s.selected=i.selected,2==s.selected&&(r.xyheight=n.clientHeight,r.xywidth=n.clientWidth,r.sample_selectedChanged()),i.removeEventListener("iron-select",e),window.setTimeout(t,501)}function t(){i.addEventListener("iron-select",e)}var a;a=document.createElement("drag-avatar"),document.body.appendChild(a),this.avatar=a;var s=this.$.innerpages,i=this.$.innertabs,n=this.$.xy_bounder,r=this;i.addEventListener("iron-select",e);var o=this.$.beat_container.querySelectorAll(".s");Beats.id_yo=Array.prototype.slice.call(o,0),Beats.id_yo.sort(function(e,t){return e.id<t.id?-1:e.id>t.id?1:0}),this.x_pos=0,this.y_pos=0},getClickPosition:function(e){e.preventDefault();var t;t="xy"==e.target.id?getPosition(e.target):getPosition(e.target.parentNode);var a=e.detail.x-t.x,s=e.detail.y-t.y;a=Math.max(Math.min(a,this.xywidth),0),s=Math.max(Math.min(s,this.xyheight),0),console.log(a,s);var i=bc.xyheight,n=bc.xywidth/2;this.$.thing.style.left=a-12+"px",this.$.thing.style.top=s-10+"px";var r=(a-n)*(100/n),o=(i-s)*(100/i),l=bc.sample_selected+1;if(bc.x_pos=Math.round(r),bc.y_pos=Math.round(o),"pf"==Beats.effect_selected)Beats.FX.pitch[l]=Math.round(r),Beats.FX.gain[l]=Math.round(o),Beats.gain_nodes[l].gain.value=1-Beats.FX.gain[l]/100;else if("pc"==Beats.effect_selected){Beats.FX.pan[l]=Math.round(r),Beats.FX.crush[l]=Math.round(o);var c=Beats.FX.pan[l]/100,_=1-Math.abs(c);Beats.pan_nodes[l].setPosition(c,0,_),shufflePanNodes(l),shuffleCrushNodes(l)}else"d"==Beats.effect_selected&&(Beats.FX.delay_fb[l]=Math.round(r),Beats.FX.delay_time[l]=Math.round(o),shuffleDelayNodes(l),Beats.delay_nodes[l].delayTime.value=Math.abs(Beats.FX.delay_time[l])/100,Beats.delay_fb_nodes[l].gain.value=Beats.FX.delay_fb[l]/100-.1);switch(e.type){case"up":thing.style.transition="left .2s ease-in, top .2s ease-in",1==Beats.not_playing&&bc.play_samp(l);break;case"track":thing.style.transition="left 0s ease-in, top 0s ease-in"}bc.is_anim=!1,bc.set_translate(thing,0)},x_posChanged:function(){var e=this.$.fxxpolyline;this.x_pos<0?e.setAttribute("points","45.63,20.375 0.375,58.087 45.63,95.8"):e.setAttribute("points","0.375,20.375 45.63,58.087 0.375,95.8")},y_posChanged:function(){},fxui1_click:function(){var e=bc.$.thing,t=bc.sample_selected+1;bc.x_pos=0,e.style.transition="left .2s ease-in, top .2s ease-in","pf"==Beats.effect_selected?(Beats.FX.pitch[t]=0,e.style.backgroundColor="whitesmoke",Beats.is_animating_pitch[t]=!1,e.style.left=this.scaleToX(0)+"px"):"pc"==Beats.effect_selected?(Beats.FX.pan[t]=0,Beats.pan_nodes[t].setPosition(0,0,0),e.style.backgroundColor="whitesmoke",Beats.is_animating_pan[t]=!1,e.style.left=this.scaleToX(0)+"px",shufflePanNodes(t)):"d"==Beats.effect_selected&&(Beats.FX.delay_fb[t]=0,e.style.backgroundColor="whitesmoke",Beats.is_animating_feedback[t]=!1,e.style.left=this.scaleToX(0)+"px",shuffleDelayNodes(t))},fxui2_click:function(){var e=bc.$.thing,t=bc.sample_selected+1;bc.y_pos=0,"pf"==Beats.effect_selected?Beats.FX.gain[t]=0:"pc"==Beats.effect_selected?(Beats.FX.crush[t]=0,shuffleCrushNodes(t)):"d"==Beats.effect_selected&&(Beats.FX.delay_time[t]=0,shuffleDelayNodes(t)),e.style.transition="left .2s ease-in, top .2s ease-in",e.style.backgroundColor="whitesmoke",e.style.top=this.scaleToY(0)+"px"},anim_click:function(){var e=bc.sample_selected+1,t=bc.$.thing;if(t.style.transition="transform .2s ease-in-out","pf"==Beats.effect_selected&&(1==this.$.anim.checked?(t.style.backgroundColor="#ff0",Beats.is_animating_pitch[e]=!0):(t.style.backgroundColor="whitesmoke",Beats.is_animating_pitch[e]=!1,bc.set_translate(t,0),bc.x_pos=Beats.FX.pitch[e])),"pc"==Beats.effect_selected)if(1==this.$.anim.checked)t.style.backgroundColor="#ff0",Beats.is_animating_pan[e]=!0;else{t.style.backgroundColor="whitesmoke",Beats.is_animating_pan[e]=!1;var a=Beats.FX.pan[e]/100,s=1-Math.abs(a);Beats.pan_nodes[e].setPosition(a,0,s),bc.set_translate(t,0),bc.x_pos=Beats.FX.pan[e]}"d"==Beats.effect_selected&&(1==this.$.anim.checked?(t.style.backgroundColor="#ff0",Beats.is_animating_feedback[e]=!0):(t.style.backgroundColor="whitesmoke",Beats.is_animating_feedback[e]=!1,bc.set_translate(t,0),bc.x_pos=Beats.FX.delay_fb[e]))},pitch_anim:[0,0,0,0,0,0,0,0,0],pan_anim:[0,0,0,0,0,0,0,0,0],feedback_anim:[0,0,0,0,0,0,0,0,0],handleTrack:function(e){switch(e.detail.state){case"start":var t=window.getComputedStyle(e.target)["background-color"];this.avatar.style.cssText="display:block;border: 3px solid "+t+"; width: 15px; height: 15px; border-radius: 15px; background-color: whitesmoke; z-index: 9;";break;case"track":var a=e.detail.x,s=e.detail.y;this.avatar.style.transform=this.avatar.style.webkitTransform="translate("+a+"px, "+s+"px)";break;case"end":this.avatar.style.display="none";var t=window.getComputedStyle(e.target)["background-color"],i=e.detail.hover();t&&"s"===i.classList[0]&&this.dropyo(t,i)}},dropyo:function(e,t){var a=t.id,s=div_array.indexOf(a);0==Beats.beats_array[s]?(t.style.background=e,Beats.beats_array[s]=color_array.indexOf(e)):e==color_array[0]?(t.style.background=e,Beats.beats_array[s]=0,Beats.beats_array2[s]=0):e==color_array[Beats.beats_array[s]]?(t.style.background=e,Beats.beats_array[s]=color_array.indexOf(e),Beats.beats_array2[s]=0):(t.style.background="-webkit-linear-gradient(left top, "+e+" 48%, "+color_array[Beats.beats_array[s]]+" 52%)",t.style.background="linear-gradient(to bottom right, "+e+" 48%, "+color_array[Beats.beats_array[s]]+" 52%)",Beats.beats_array2[s]=color_array.indexOf(color_array[Beats.beats_array[s]]),Beats.beats_array[s]=color_array.indexOf(e))},play_samp:function(e){playSound(bufferListy[e-1],Audiocontext.currentTime,e)},play_a_samp:function(e){if(1==Main.is_rec){var t=Beats.setting-Beats.one;t==-1&&(t=31),0==Beats.beats_array[t]?(Beats.beats_array[t]=e,Beats.id_yo[t].style.backgroundColor=color_array[e]):Beats.beats_array[t]==e||(Beats.id_yo[t].style.background="-webkit-linear-gradient(left top, "+color_array[e]+" 48%, "+color_array[Beats.beats_array[t]]+" 52%)",Beats.id_yo[t].style.background="linear-gradient(to bottom right, "+color_array[e]+" 48%, "+color_array[Beats.beats_array[t]]+" 52%)",Beats.beats_array2[t]=Beats.beats_array[t],Beats.beats_array[t]=e)}playSound(bufferListy[e-1],Audiocontext.currentTime,e)},play_samp1:function(){this.play_a_samp(1)},play_samp2:function(){this.play_a_samp(2)},play_samp3:function(){this.play_a_samp(3)},play_samp4:function(){this.play_a_samp(4)},play_samp5:function(){this.play_a_samp(5)},play_samp6:function(){this.play_a_samp(6)},play_samp7:function(){this.play_a_samp(7)},play_samp8:function(){this.play_a_samp(8)},go_dude:function(){function e(){if(0==Beats.not_playing){for(t=12.5*(Math.abs(Beats.setting-16)-8)/100,i=1;i<9;i++){if(1==Beats.is_animating_pitch[i]&&(this.pitch_anim[i]=t*Beats.FX.pitch[i]),1==Beats.is_animating_pan[i]){var s=Beats.FX.pan[i]*t/100,n=1-Math.abs(s);Beats.pan_nodes[i].setPosition(s,0,n)}1==Beats.is_animating_feedback[i]&&(Beats.delay_fb_nodes[i].gain.value=Beats.FX.delay_fb[i]*t/100-.1)}if(2==this.$.innerpages.selected){var r=this.sample_selected+1;if("pf"==Beats.effect_selected){if(1==Beats.is_animating_pitch[r]){this.x_pos=Math.round(this.pitch_anim[r]);var o=Beats.FX.pitch[r];this.thing_anim(o)}}else if("pc"==Beats.effect_selected){if(1==Beats.is_animating_pan[r]){this.pan_anim[r]=t*Beats.FX.pan[r],this.x_pos=Math.round(this.pan_anim[r]);var o=Beats.FX.pan[r];this.thing_anim(o)}}else if("d"==Beats.effect_selected&&1==Beats.is_animating_feedback[r]){this.feedback_anim[r]=t*Beats.FX.delay_fb[r],this.x_pos=Math.round(this.feedback_anim[r]);var o=Beats.FX.delay_fb[r];this.thing_anim(o)}}play_yo_yo(this,a),this.async(e,Beats.speed_setting/2)}}var t,a=document.getElementById("synth-card");0==Beats.not_playing?(Beats.not_playing=!0,this.is_anim=!1,a.stop_note()):(Beats.not_playing=!1,this.async(e,1))},is_anim:{type:Boolean,value:!1},thing_anim:function(e){var t=this.$.thing,a=6e4/Beats.speed_setting,s=480/a;if(1==Beats.setting){t.style.transition="transform "+s+"s ease-in-out",t.style.webkitTransition="-webkit-transform "+s+"s ease-in-out";var i=this.animScale(e)*-2;this.set_translate(t,i),this.is_anim=!0}else 16==Beats.setting&&(t.style.transition="transform "+s+"s ease-in-out",t.style.webkitTransition="-webkit-transform "+s+"s ease-in-out",this.set_translate(t,0),this.is_anim=!0)},animScale:function(e){var t=this.xywidth/2,a=e/(100/t);return a}});</script>
+</dom-module>
+
+</body></html>

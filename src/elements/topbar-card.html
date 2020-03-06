@@ -1,0 +1,370 @@
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+
+
+
+<dom-module id="topbar-card">
+  <style>
+    
+  :host {
+      display: block;
+      position: relative;
+      font-size: 0.8rem;
+      font-weight: 300;
+      --paper-toggle-button-checked-button-color:#FF0000;
+      --paper-toggle-button-checked-bar-color:#FF0000;
+      --paper-toggle-button-checked-ink-color:#FF0000;
+    }
+
+  #bpm_input {
+    margin:0px 8px;
+    width: 42px;
+  }
+
+  #topbarbar {
+    white-space: nowrap;
+    height:50px;
+    /*margin: auto;
+    left:10px;*/
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+  }
+
+  .topbarlayout{
+    -ms-flex-direction: row;
+      -webkit-flex-direction: row;
+      flex-direction: row; 
+      width: 100%;
+      height: 50px;
+      margin: 0 auto;
+  }
+  .bpmlayout {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-direction: row;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+  }
+  @media (max-device-width: 1024px) and (orientation: landscape) { 
+    #topbarbar {
+      height:100%;
+    }
+      .topbarlayout {
+        -ms-flex-direction: column;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+        width: 80px;
+        height: 320px;
+        margin: auto 0;
+      }
+     /*.bpmlayout {
+        -ms-flex-direction: column;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+      }*/
+
+        /*-ms-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;*/
+  }
+
+  #dialogdiv{
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -ms-flex-direction: column;
+      -webkit-flex-direction: column;
+      flex-direction: column;
+      -ms-flex-pack: justify;
+      -webkit-justify-content: space-between;
+      justify-content: space-between;
+    }
+
+    #clearbeat {
+      pointer-events:none;
+      cursor:auto;
+      opacity:0.5;
+      margin-left: 8px;
+    }
+    #trasher {
+      margin-left: 8px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .clearbeaton {
+      pointer-events:auto !important;
+      cursor:pointer !important;
+      opacity: 1 !important;
+    }
+    #button{
+      cursor: pointer;
+    }
+    #recbutton{
+      cursor: pointer;
+    }
+    #settingsbutton{
+      cursor: pointer;
+    }
+  </style>
+
+<template>
+
+
+<div id="topbarbar" class="topbarlayout layout center around-justified">
+<paper-icon-button id="menuicon" icon="menu" on-tap="collapse"></paper-icon-button> 
+    <paper-icon-button id='button' on-tap="play" icon='{{play_icon}}'></paper-icon-button>
+    <!--<input type="button" value="ios" style="margin: 10px;"/>-->
+    <paper-icon-button id='recbutton' on-tap="rec" icon='{{rec_icon}}'></paper-icon-button>
+    <!--<paper-icon-button id='loadbutton' icon='launch' on-tap="{{load}}">{{load_label}}</paper-icon-button>--> 
+    <paper-icon-button id='settingsbutton' on-click="settings" icon='settings'></paper-icon-button>
+</div>
+
+
+<paper-dialog entry-animation="scale-up-animation"
+              exit-animation="fade-out-animation" id="settingsdialog">
+  <div id="dialogdiv">
+    <span class="bpmlayout layout center"><label for="bpm_input">{{bpm_label}}</label>
+      <paper-input type="number" prevent-invalid-input no-label-float="true" id="bpm_input" value="{{bpm_yo}}"></paper-input></span>
+
+    <div style="margin:20px 0;">
+      <span>Drum volume: <b>{{drum_volume}}</b></span><br/>
+      <span>Synth volume: <b>{{synth_volume}}</b></span><br/>
+      <paper-slider id="mixslider" min="-100" max="100" value="0" pin on-immediate-value-change="volchange" on-value-change="volchange"></paper-slider>
+    </div>
+
+    <span>Clear Beat: 
+    <paper-toggle-button id="trasher" on-change="delete_on"></paper-toggle-button>
+    <paper-icon-button id='clearbeat' on-tap="clearbeat" icon='delete'></paper-icon-button
+    ></span>
+  </div>
+</paper-dialog>
+
+
+</template>
+
+
+<script>
+
+Polymer({
+
+  is: 'topbar-card',
+
+  ready: function() {
+    //TESTING TESTING
+    //this.horizontal();
+  },
+
+  properties: {
+
+    bpm_yo: {
+      type: Number,
+      value: 220,
+      observer: 'bpm_yoChanged'
+    },
+
+    play_label: {
+      type: String,
+      value: 'Play'
+    },
+
+    bpm_label: {
+      type: String,
+      value: 'BPM:'
+    },
+
+    play_icon: {
+      type: String,
+      value: 'av:play-arrow'
+    },
+
+    rec_icon: {
+      type: String,
+      value: 'av:play-circle-filled'
+    },
+
+    rec_color: {
+      type: String,
+      value:'color:black'
+    },
+
+    drum_volume: {
+      type: Number,
+      value: 100
+    },
+
+    synth_volume: {
+      type: Number,
+      value: 100
+    },
+
+  },
+
+  bpm_yoChanged: function() {
+    //console.log('bpm changed');
+    Beats.speed_setting = 60000/this.bpm_yo;
+    Beats.bpm=this.bpm_yo;
+    /*Beats.speed_setting = 60000/this.bpm_yo;
+    Beats.bpm=this.bpm_yo;*/
+  },
+  collapse: function() {
+    document.getElementById('appcard').$.paperDrawerPanel.togglePanel()
+  },
+  play: function(e) {
+    //e.preventDefault();
+    if(Main.is_playing==true) {
+      this.play_icon='av:play-arrow'
+      Main.is_playing=false;
+      if(Main.is_rec==true) {
+        this.rec();
+        this.$.recbutton.childNodes[1].downAction();
+        this.$.recbutton.childNodes[1].upAction();
+      }
+    }
+    else {
+      this.play_icon='av:stop'
+      Main.is_playing=true;
+    }
+    document.getElementById('beat-card').go_dude();
+  },
+  rec: function(e) {
+    //e.preventDefault();
+    if(Main.is_rec==true) {
+      this.$.recbutton.style.color='black';
+      this.rec_icon='av:play-circle-filled'
+      Main.is_rec=false;
+    }
+    else{
+      this.$.recbutton.style.color="red";
+      this.rec_icon='av:pause-circle-filled'
+      Main.is_rec=true;
+    }
+  },
+  settings: function(e) {
+    //e.preventDefault();
+    this.$.settingsdialog.toggle()
+  },
+  volchange: function(e) {
+    var val=this.$.mixslider.value;
+    Beats.mix=val;
+    if(val<0) {
+      this.drum_volume=100;
+      this.synth_volume=100+e.target.immediateValue;
+    }
+    else if(val>0){
+      this.synth_volume=100
+      this.drum_volume=100-e.target.immediateValue;
+    }
+    else{
+      this.synth_volume=100;
+      this.drum_volume=100;
+    }
+    if(Main.ready==true) {
+
+      Synth.gain_nodes[0].gain.value = Math.pow(2, 6.643*(this.synth_volume/100))/100; //.643 = log base 2 of 100
+      Beats.gain_nodes[0].gain.value = Math.pow(2, 6.643*(this.drum_volume/100))/100;
+    }
+  },
+  delete_on: function() {
+    if(this.$.trasher.checked==true) {
+      this.$.clearbeat.classList.add('clearbeaton');
+    }
+    else {
+      this.$.clearbeat.classList.remove('clearbeaton');
+    }
+  },
+  clearbeat: function() {
+    this.cleary();
+    this.$.trasher.checked=false;
+    this.$.clearbeat.classList.toggle('clearbeaton');
+  },
+
+  ready: function() {
+    this.$.bpm_input.focus();
+  },
+
+  cleary: function() {
+    var clear = {
+
+        Beats: {
+
+          b_a : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          b_a2 : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          f_c : 100,
+          r_s : 30,
+          r_o : true,
+          c_s : 30,
+          FX: {
+            pi : [0,0,0,0,0,0,0,0,0],
+            g : [0,0,0,0,0,0,0,0,0],
+            c : [0,0,0,0,0,0,0,0,0],
+            pa : [0,0,0,0,0,0,0,0,0],
+            d_f : [0,0,0,0,0,0,0,0,0],
+            d_t : [0,0,0,0,0,0,0,0,0]
+          },
+          is_a_pi : [false, false, false, false, false, false, false, false, false], 
+          is_a_pa : [false, false, false, false, false, false, false, false, false], 
+          is_a_f : [false, false, false, false, false, false, false, false, false], 
+
+          r_d_s : 0,
+          f_d_s : 0,
+          c_d_s : 0,
+
+          bpm : 220,
+          mU : [false,false,false,false,false,false,false,false],
+          muN : ['kick','snare','hihat','kick808','bells','jawharp','clap','clave'],
+
+          m:0
+
+        },
+
+        Synth: {
+
+          s_a : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          f_c : 45,
+          r_s : 30,
+          r_o : true,
+          s_s : 30,
+
+          FX: {
+            l1 : 0,
+            l2 : 0,
+            ah1 : 0,
+            ah2 : 0,
+            ad1 : 2,
+            ad2 : 10,
+            o1w : 25,
+            o1f : 0,
+            o2w : 0,
+            o2f : 0
+          },
+
+          MOD: {
+            lfo_s : 1,
+            adsr_s : 1,
+            ah_s : 1,
+            osc1_s : 4,
+            osc2_s : 4,
+            ah: [0,0,0]
+          },
+
+          sO : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+
+          r_d_s : 0,
+          s_d_s : 0
+
+        }
+
+      }//end saver object
+      app.$.appcard.$.cc.loadData(clear)
+      //Polymer.dom(this).parentNode.$.cc.loadData(saver)
+  }
+
+});
+
+
+</script>
+</dom-module>

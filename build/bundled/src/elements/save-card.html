@@ -1,0 +1,90 @@
+<html><head><link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+</head><body><dom-module id="save-card">
+<style>
+
+
+    #saver{
+      width:280px;
+      margin:0 auto;
+    }
+
+    #button {
+      color: #fff;
+      background-color: #26a69a;
+      text-align: center;
+      letter-spacing: .5px;
+      cursor: pointer; 
+      border: none;
+      border-radius: 2px;
+      display: inline-block;
+      height: 36px;
+      line-height: 36px;
+      outline: 0;
+      padding: 0 2rem;
+      vertical-align: middle;
+      margin-top:19px;
+      text-transform: none !important;
+      transition: all 300ms ease-in;
+      -webkit-transition: all 300ms ease-in;
+    }
+
+
+  #button:hover {
+      background-color: #2bbbad; }
+
+  .midd{
+    text-align: center;
+  }
+
+  .btn{
+      text-decoration: none;
+      color: #fff;
+      background-color: #26a69a;
+      text-align: center;
+      letter-spacing: .5px;
+      -webkit-transition: .2s ease-out;
+      -moz-transition: .2s ease-out;
+      -o-transition: .2s ease-out;
+      -ms-transition: .2s ease-out;
+      transition: .2s ease-out;
+      cursor: pointer; 
+      border: none;
+      border-radius: 2px;
+      display: inline-block;
+      height: 36px;
+      line-height: 36px;
+      outline: 0;
+      padding: 0 2rem;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+   .btn:hover {
+      background-color: #2bbbad; 
+    }
+  </style>
+
+<template>
+
+  <paper-input label="{{label}}" id="saver" maxlength="10" allowed-pattern="[a-zA-Z0-9-]+" on-keypress="_enter" on-focus="focus"></paper-input>
+
+  <div class="midd">
+    <paper-button id="button" on-tap="save">Save</paper-button>
+  </div>
+
+  <paper-dialog style="min-width:240px" entry-animation="scale-up-animation" exit-animation="fade-out-animation" id="OWdialog">
+        <div class="midd">Overwrite <span>{{owname}}</span>?</div>
+
+        <div class="vertical layout center">
+          <button class="socialbtnyo btn" id="yesow" on-tap="okoverwrite">Yes</button>
+        
+          <button class="socialbtnyo btn" id="noow" on-tap="cancelow">No</button>
+        </div>
+      </paper-dialog>
+  
+</template>
+
+
+<script>Polymer({is:"save-card",properties:{sets:{type:Array}},ready:function(){this.label="Name your Beat:",this.owname=""},_enter:function(e){13===e.keyCode&&(e.preventDefault(),this.save())},save:function(){if(this.$.saver.value){var e=this.$.saver.value,s=!1;if(this.sets)for(var t=0;t<this.sets.length;t++)this.sets[t]==e&&(s=!0);s?(this.$.OWdialog.open(),this.owname=e):(this.fire("save",e),Main.tabs.selected=3,Main.pages.select(3),this.$.saver.value=null)}},okoverwrite:function(){this.fire("overwrite",this.owname),Main.tabs.selected=3,Main.pages.select(3),this.$.saver.value=null,this.$.OWdialog.close()},cancelow:function(){this.$.OWdialog.close()}});</script>
+</dom-module></body></html>

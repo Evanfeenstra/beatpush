@@ -1,0 +1,90 @@
+<html><head><link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="freesound-item.html">
+
+
+</head><body><dom-module id="freesound-card">
+
+  <template>
+
+    <style>
+      :host {
+        
+      }
+
+      .button {
+        color: #fff;
+        background-color: #26a69a;
+        text-align: center;
+        letter-spacing: .5px;
+        cursor: pointer; 
+        border: none;
+        border-radius: 2px;
+        display: inline-block;
+        height: 36px;
+        line-height: 36px;
+        outline: 0;
+        padding: 0 2rem;
+        vertical-align: middle;
+        margin-top:19px;
+        margin-bottom:19px;
+        text-transform: none !important;
+        transition: all 300ms ease-in;
+        -webkit-transition: all 300ms ease-in;
+      }
+
+      #button:hover {
+          background-color: #2bbbad; }
+
+      #searcher{
+        width:280px;
+      }
+
+      .midd{
+        text-align: center;
+        margin-bottom: 7px;
+      }
+
+      img{
+        margin-top: 8px;
+      }
+
+      #dialog{
+        min-width: 240px;
+        z-index:97 !important;
+      }
+
+
+
+
+    </style>
+
+    <iron-ajax id="ajax" auto="" url="{{url}}" handle-as="json" last-response="{{r}}"></iron-ajax>
+
+    <div class="vertical layout center">
+
+      <paper-input label="Search Freesound.org" id="searcher" maxlength="25" allowed-pattern="[a-zA-Z0-9-]+" on-keypress="_enter"></paper-input>
+
+      <paper-button class="button" on-tap="search" id="searchbutton">Search</paper-button>
+
+      <img src="../images/spinner128.gif" height="50px" width="50px" hidden$="{{nospinner}}">
+
+      <div id="repeater">
+        <template is="dom-repeat" items="{{r.results}}" as="sound">
+            <freesound-item sound="{{sound}}" class="horizontal layout searchli" index="{{index}}" on-load="downloadSound"></freesound-item>
+        </template>
+      </div>
+
+      <paper-button class="button" on-tap="showMore" hidden$="{{nomore}}">More</paper-button>
+
+      <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+        <color-card on-color="color" id="colorcard"></color-card>
+      </paper-dialog>
+
+    </div>
+
+  </template>
+  <script>Polymer({is:"freesound-card",properties:{r:{type:Object,observer:"rChange"}},ready:function(){this.url=null,this.nospinner=!0,this.nomore=!0},rChange:function(){this.nospinner=!0,this.r.next?this.nomore=!1:this.nomore=!0},_enter:function(e){13===e.keyCode&&(e.preventDefault(),this.search())},search:function(){this.nospinner=!1,this.$.searcher.value&&(this.url="https://hook.io/evan/freesound/?q="+this.$.searcher.value)},showMore:function(){this.nospinner=!1,window.scroll(0,0);var e=this.r.next,s=e.substring(e.indexOf("page=")+5,e.indexOf("&page_size"));this.url="https://hook.io/evan/freesoundmore/?q="+this.$.searcher.value+"&page="+s},downloadSound:function(e){this.$.dialog.open(),this.soundId=e.detail.id,this.soundName=e.detail.name;var s=e.detail.url;this.soundUrl="https"+s.substring(4,s.length)},color:function(e){bufferListy[e.detail-1]=loadedBufferArray[this.soundId],Beats.masterUrls[e.detail-1]=this.soundUrl,Beats.masterUrlNames[e.detail-1]=this.soundName;var s="name"+String(e.detail);bc[s]=String(this.soundName),Main.tabs.selected=0,this.$.dialog.close()}});</script>
+</dom-module>
+</body></html>

@@ -1,0 +1,122 @@
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="loader-item">
+
+  <template>
+
+    <style>
+      :host {
+        min-height: 50px;
+        margin:12px;
+      }
+
+      .row {
+        position: relative;
+        padding: 6px 10px 6px 10px;
+        background-color: rgba(200,200,200,0.5);
+        width:280px;
+      }
+
+      .row:hover{
+        background-color: rgba(235,235,235,0.7);
+      }
+
+      #button{
+        margin-right:9px;
+      }
+
+      #fbshare{
+        color:white;
+        background-color:#3B5998;
+        padding:0px;
+        background: url('/images/facebook1.png') transparent 0px 50% no-repeat;
+        width: 32px;
+        height: 32px;
+        border-radius: 5px;
+      }
+
+      #twshare{
+        color:white;
+        padding:0px;
+        background: url('/images/icn-twitter-32x32.png') transparent 0px 50% no-repeat;
+        width: 32px;
+        height: 32px;
+        border-radius: 5px;
+        cursor:pointer;
+      }
+
+      paper-button{
+        min-width:0px !important;
+        margin:0px 0px 0px 10px;
+      }
+
+
+    </style>
+    <paper-material elevation="3"
+                    class="row layout horizontal center justified">
+
+    <div class="layout horizontal center">
+      <paper-icon-button id='button' on-tap="load" icon='exit-to-app'></paper-icon-button>
+      {{sett}}
+    </div>
+
+    <div class="layout horizontal center">
+      <paper-button id="fbshare" on-tap="FB"></paper-button>
+
+      <paper-button id="twshare" on-tap="TW"></paper-button>
+
+    </div>
+
+    </paper-material>
+
+    <paper-icon-button style="margin-top:7px;" on-tap="delete" icon='delete' hidden$='{{deleteoff}}'></paper-icon-button>
+
+  </template>
+  <script>
+    Polymer({
+
+      is: 'loader-item',
+
+      properties: {
+
+        sett: Object,
+
+        deleteon: Boolean,
+
+        uid: String
+
+      },
+
+      load: function(e) {
+        this.fire("loader",this.sett)
+      },
+
+      ready: function() {
+        this.deleteoff=true
+      },
+
+      delete: function() {
+        this.fire("delete",{"name":this.sett,"index":this.index})
+      },
+
+      FB: function() {
+        var urlString=this.uid+'__'+this.sett
+        FB.ui(
+         {
+          method: 'share',
+          href: 'https://beatpush.com/'+urlString
+        }, function(response){});
+      },
+
+      TW: function() {
+        var urlString='https://beatpush.com/'+this.uid+'__'+this.sett
+
+        window.open("https://twitter.com/share?url="+urlString+"&text=Check out my new beat!","", "width=350, height=450")
+      }
+
+        
+
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,64 @@
+<html><head><link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+</head><body><dom-module id="collection-card">
+<style>
+  :host{
+      text-align: center;
+      --paper-toggle-button-checked-button-color:#FF0000;
+      --paper-toggle-button-checked-bar-color:#FF0000;
+      --paper-toggle-button-checked-ink-color:#FF0000;
+     }
+	   #title{
+       margin-bottom:18px;
+       text-align: center;     
+     }
+
+    #trasher {
+      margin-left: 8px;
+      display: inline-block;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
+    #deleter{
+      width:320px;
+      text-align: right;
+      margin-bottom: 22px;
+    }
+
+    #OWdialog{
+
+    }
+
+  </style>
+
+<template>
+
+	<strong hidden$="{{hideTitle(uid)}}" id="title">[[_title(userName)]]</strong>
+  
+      <template is="dom-repeat" items="{{sets}}" as="sett" filter="{{_computeFilter(filterBy)}}" observe="isComplete">
+          <loader-item sett="{{sett}}" deleteoff="{{deleteoff}}" on-loader="load" on-delete="delete" class="horizontal layout" index="{{index}}" uid="{{uid}}"></loader-item>
+      </template>
+
+      <div id="deleter" hidden$="{{deleterhidden}}">
+        <span>Delete:</span><paper-toggle-button id="trasher" on-change="delete_on"></paper-toggle-button>
+      </div>
+
+  <strong id="title2">Example Beats</strong>
+
+    <loader-example id="loader1" name="1" on-loader="loadExample" class="horizontal layout"></loader-example>
+    <loader-example id="loader2" name="2" on-loader="loadExample" class="horizontal layout"></loader-example>
+    <loader-example id="loader3" name="3" on-loader="loadExample" class="horizontal layout"></loader-example>
+
+
+      <iron-ajax id="ajax" auto="" url="{{url}}" handle-as="arraybuffer" last-response="{{r}}"></iron-ajax>
+
+      <iron-ajax id="exampleAjax" auto="" url="{{exampleurl}}" handle-as="json" last-response="{{example}}"></iron-ajax>
+      
+
+</template>
+
+
+<script>Polymer({is:"collection-card",properties:{uid:{type:String,observer:"uidChange"},sets:{type:Array,notify:!0,observer:"setsChange"},_firebaseConnected:{value:!1},location:{type:String,value:"https://beatpush.firebaseio.com"},filterBy:{type:String,value:"all"},r:{type:Object,observer:"rChange"},example:{type:Object,observer:"exampleChange"}},ready:function(){this._ref=null,this.url=null,this.deleteoff=!0,this.deleterhidden=!0,this.exampleurl=null},exampleChange:function(){this.loadData(this.example)},loadExample:function(e){this.exampleurl="https://rawgit.com/Evanfeenstra/examplebeats/master/"+e.detail+".json"},_title:function(e){return e+"'s Beats"},hideTitle:function(e){return!e},setsChange:function(e){this.sets?this.deleterhidden=!1:(this.deleterhidden=!0,this.deleteoff=!0,this.$.trasher.checked=!1)},delete_on:function(){1==this.$.trasher.checked?this.deleteoff=!1:this.deleteoff=!0},save:function(e){this.sets?this.push("sets",e.detail):this.set("sets",[e.detail]),console.log("Firebase: rewrite _ array"),this._ref.child("_").set(this.sets),this.saveData(e.detail)},overwrite:function(e){this.saveData(e.detail)},delete:function(e){console.log("Firebase: Delete set"),this._ref.child("sets").child(e.detail.name).remove(),this.splice("sets",e.detail.index,e.detail.index+1),console.log("Firebase: delete and rewrite _ array"),this._ref.child("_").set(this.sets)},load:function(e){var s=this;console.log("Firebase: read set once"),this._ref.child("sets").child(e.detail).once("value",function(e){s.loadData(e.val())}),Main.tabs.selected=0,Main.pages.select(0)},uidChange:function(e){if(e){var s=this;this.userLocation=[this.location,"users",e].join("/"),this._ref=new Firebase(this.userLocation),this._ref.child("_").on("value",function(e){s.set("sets",e.val()),console.log("Firebase: real-time value of _ array",e.val())})}else this.userLocation=null,this.sets=null},_computeFilter:function(e){if(e&&"all"===e)return function(e){return!0}},loadFXSettings:function(e){for(i=1;i<9;i++){Beats.gain_nodes[i].gain.value=1-Beats.FX.gain[i]/100;var s=Beats.FX.pan[i]/100,t=1-Math.abs(s);Beats.pan_nodes[i].setPosition(s,0,t),Beats.delay_nodes[i].delayTime.value=Math.abs(Beats.FX.delay_time[i])/100,Beats.delay_fb_nodes[i].gain.value=Beats.FX.delay_fb[i]/100-.1,shuffleCrushNodes(i),shuffleDelayNodes(i),shufflePanNodes(i)}e.sample_selectedChanged()},loadData:function(e){Main.tabs.selected=0;var s=document.getElementById("topbar");sc.stop_note(),Beats.beats_array=e.Beats.b_a,Beats.beats_array2=e.Beats.b_a2,bc.filter_cutoff=e.Beats.f_c,bc.$.filterslider.value=e.Beats.f_c,bc.reverb_setting=e.Beats.r_s,bc.$.verbslider.value=e.Beats.r_s,Beats.reverb_on=e.Beats.r_o,bc.compressor_setting=e.Beats.c_s,bc.$.cslider.value=e.Beats.c_s,Beats.FX.pitch=e.Beats.FX.pi,Beats.FX.gain=e.Beats.FX.g,Beats.FX.crush=e.Beats.FX.c,Beats.FX.pan=e.Beats.FX.pa,Beats.FX.delay_fb=e.Beats.FX.d_f,Beats.FX.delay_time=e.Beats.FX.d_t,Beats.is_animating_pitch=e.Beats.is_a_pi,Beats.is_animating_pan=e.Beats.is_a_pa,Beats.is_animating_feedback=e.Beats.is_a_f,Beats.reverb_dropdown_selected=e.Beats.r_d_s,bc.$.reverbselect.selectedIndex=Beats.reverb_dropdown_selected,reverbDropChange(Beats.reverb_dropdown_selected),Beats.filter_dropdown_selected=e.Beats.f_d_s,bc.$.filter_dd.selectedIndex=Beats.filter_dropdown_selected,filterDropChange(Beats.filter_dropdown_selected),Beats.compressor_dropdown_selected=e.Beats.c_d_s,bc.$.compressor_dd.selectedIndex=Beats.compressor_dropdown_selected,compressorDropChange(Beats.compressor_dropdown_selected),this.loadFXSettings(bc);for(var t=0;t<32;t++)0==Beats.beats_array2[t]?Beats.id_yo[t].style.background=color_array[Beats.beats_array[t]]:(Beats.id_yo[t].style.background="-webkit-linear-gradient(left top, "+color_array[Beats.beats_array[t]]+" 48%, "+color_array[Beats.beats_array2[t]]+" 52%)",Beats.id_yo[t].style.background="linear-gradient(to bottom right, "+color_array[Beats.beats_array[t]]+" 48%, "+color_array[Beats.beats_array2[t]]+" 52%)");Synth.synth_array=e.Synth.s_a,sc.filter_cutoff=e.Synth.f_c,sc.$.fsliderS.value=e.Synth.f_c,sc.reverb_setting=e.Synth.r_s,sc.$.verbsliderS=e.Synth.r_s,Synth.reverb_on=e.Synth.r_o,sc.scale_setting=e.Synth.s_s,sc.$.scaleslider.value=e.Synth.s_s,Synth.FX.lfo2=e.Synth.FX.l2,_S.onFilterMod(Math.round(2*Synth.FX.lfo2)),Synth.FX.lfo1=e.Synth.FX.l1,_S.onModFrequency(Math.round(102-Synth.FX.lfo1)),sc.lfo_selected=e.Synth.MOD.lfo_s,sc.adsr_selected=e.Synth.MOD.adsr_s,sc.ah_selected=e.Synth.MOD.ah_s,sc.osc1_selected=e.Synth.MOD.osc1_s,sc.osc2_selected=e.Synth.MOD.osc2_s,Synth.FX.ah1=e.Synth.FX.ah1,Synth.MOD.ah=e.Synth.MOD.ah,Synth.FX.ah2=e.Synth.FX.ah2;var a=Math.round(Synth.FX.ah1/25+1);sc.ah_x=a-1,4==a&&(a=3),5==a&&(a=4);var r=Math.round(Synth.FX.ah2/50);sc.ah_y=r,2==r?(r=-1,sc.$.ahsvg.childNodes[1].setAttribute("y1","10"),sc.$.ahsvg.childNodes[1].setAttribute("y2","10")):(sc.$.ahsvg.childNodes[1].setAttribute("y1","194"),sc.$.ahsvg.childNodes[1].setAttribute("y2","194")),sc.ahShuffle(a,r),sc.ahColors(),Synth.FX.adsr1=e.Synth.FX.ad1+1,Synth.FX.adsr2=e.Synth.FX.ad2,sc.decay=Synth.FX.adsr1,sc.attack=Synth.FX.adsr2,sc.adsrupdate(sc),_S.onEnvA(Math.round(Synth.FX.adsr2/10)),_S.onEnvR(Synth.FX.adsr1),until_synth_noteoff_setting=Math.round(Synth.FX.adsr2/25)*-1,_S.onFilterEnvA(Math.round(Synth.FX.adsr2/10)),_S.onFilterEnvR(Synth.FX.adsr1),1==sc.adsr_selected?(sc.sustain=100,sc.blahblah=290,until_synth_on=!0):2==sc.adsr_selected?(sc.sustain=60,sc.blahblah=290,until_synth_on=!0):3==sc.adsr_selected?(sc.sustain=20,sc.blahblah=290,until_synth_on=!0):4==sc.adsr_selected?(sc.sustain=100,sc.blahblah=500,until_synth_on=!1):5==sc.adsr_selected?(sc.sustain=60,sc.blahblah=500,until_synth_on=!1):6==sc.adsr_selected&&(sc.sustain=20,sc.blahblah=500,until_synth_on=!1),_S.onEnvS(sc.sustain),_S.onFilterEnvS(sc.sustain),Synth.FX.osc1wave=e.Synth.FX.o1w,Synth.FX.osc1fade=e.Synth.FX.o1f;var n=Math.round(Synth.FX.osc1wave/33),o="hi";0==n?o="triangle":1==n?o="square":2==n?o="sawtooth":3==n&&(o="sine"),_S.onOsc1Wave(o),_S.onOsc1Mix(100-Synth.FX.osc1fade),Synth.FX.osc2wave=e.Synth.FX.o2w,Synth.FX.osc2fade=e.Synth.FX.o2f;var i=Math.round(Synth.FX.osc2wave/33),d="hi";0==i?d="triangle":1==i?d="square":2==i?d="sawtooth":3==i&&(d="sine"),_S.onOsc2Wave(d),_S.onOsc2Mix(100-Synth.FX.osc2fade),Synth.spotOctave=e.Synth.sO,Synth.reverb_dropdown_selected=e.Synth.r_d_s,sc.$.reverbselectS.selectedIndex=Synth.reverb_dropdown_selected,reverbdropChangeS(Synth.reverb_dropdown_selected),Synth.scale_dropdown_selected=e.Synth.s_d_s,sc.$.scaledropdown.selectedIndex=Synth.scale_dropdown_selected,scaledropChangeS(Synth.scale_dropdown_selected);for(var t=0;t<32;t++)Synth.id_yo[t].style.background=color_arrayS[Synth.synth_array[t]];s.bpm_yo=e.Beats.bpm,Beats.masterUrls=e.Beats.mU,Beats.masterUrlNames=e.Beats.muN,this.loadUrls(-1),Beats.mix=e.Beats.m,s.$.mixslider.value=Beats.mix,s.$.mixslider.immediateValue=Beats.mix,bc.$.innertabs.selected=0,bc.$.innerpages.selected=0,sc.$.innertabsS.selected=0,sc.$.innerpagesS.selected=0},loadUrls:function(e){for(var s=e+1;s<8;s++){if(Beats.masterUrls[s]){this.soundNumHolder=s,this.url=Beats.masterUrls[s];break}bufferListy[s]=bufferLoader.bufferList[s];var t="name"+String(s+1);bc[t]=String(Beats.masterUrlNames[s])}},rChange:function(){var e=this;Audiocontext.decodeAudioData(e.r,function(s){if(!s)return void alert("error decoding file data");bufferListy[e.soundNumHolder]=s;var t="name"+String(e.soundNumHolder+1);bc[t]=String(Beats.masterUrlNames[e.soundNumHolder]),e.loadUrls(e.soundNumHolder)},function(e){console.log("errorrr,",e)})},saveData:function(e){var s=document.getElementById("topbar"),t={Beats:{b_a:Beats.beats_array,b_a2:Beats.beats_array2,f_c:bc.filter_cutoff,r_s:bc.reverb_setting,r_o:Beats.reverb_on,c_s:bc.compressor_setting,FX:{pi:Beats.FX.pitch,g:Beats.FX.gain,c:Beats.FX.crush,pa:Beats.FX.pan,d_f:Beats.FX.delay_fb,d_t:Beats.FX.delay_time},is_a_pi:Beats.is_animating_pitch,is_a_pa:Beats.is_animating_pan,is_a_f:Beats.is_animating_feedback,r_d_s:Beats.reverb_dropdown_selected,f_d_s:Beats.filter_dropdown_selected,c_d_s:Beats.compressor_dropdown_selected,bpm:s.bpm_yo,mU:Beats.masterUrls,muN:Beats.masterUrlNames,m:Beats.mix},Synth:{s_a:Synth.synth_array,f_c:sc.filter_cutoff,r_s:sc.reverb_setting,r_o:Synth.reverb_on,s_s:sc.scale_setting,FX:{l1:Synth.FX.lfo1,l2:Synth.FX.lfo2,ah1:Synth.FX.ah1,ah2:Synth.FX.ah2,ad1:Synth.FX.adsr1,ad2:Synth.FX.adsr2,o1w:Synth.FX.osc1wave,o1f:Synth.FX.osc1fade,o2w:Synth.FX.osc2wave,o2f:Synth.FX.osc2fade},MOD:{lfo_s:sc.lfo_selected,adsr_s:sc.adsr_selected,ah_s:sc.ah_selected,osc1_s:sc.osc1_selected,osc2_s:sc.osc2_selected,ah:Synth.MOD.ah},sO:Synth.spotOctave,r_d_s:Synth.reverb_dropdown_selected,s_d_s:Synth.scale_dropdown_selected}};console.log("Firebase: Write to set"),this._ref.child("sets").child(e).set(t)}});</script>
+</dom-module></body></html>

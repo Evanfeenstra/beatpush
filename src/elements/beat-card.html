@@ -1,0 +1,1129 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+<dom-module id="beat-card">
+<style>
+:host {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      font-size: 2em;
+      font-weight: 300;
+      --paper-toggle-button-checked-button-color:#FFFF00;
+      --paper-toggle-button-checked-bar-color:#FFFF00;
+      --paper-toggle-button-checked-ink-color:#FFFF00;
+      background-color: #E5E5E5;
+    }
+
+    ul {
+      padding: 0;
+      list-style-type: none;
+      margin: 0 0;
+    }
+    paper-slider{
+      max-width:91%;
+    }
+    #beat_container {
+      height: 100% !important;
+      width: 100%;
+    }
+    .hundo {
+      width: 100%;
+      height: 100% !important;
+    }
+    .drumkit_container {
+      background-color: rgba(228,228,228,0.7);
+      width:100%;
+      height: 100% !important;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none; 
+      -moz-user-select: none; 
+      -ms-user-select: none; 
+      -o-user-select: none; 
+      user-select: none;
+    }
+    #innertabs{
+     background-color: rgba(34,34,34,0.5);
+     /*height: 1.75rem;
+     width: 14rem;*/
+     width: 100%;
+     color: white;
+     font-size: .5em;
+     height: 15%;
+   }
+   #tabsamples #t1{
+      background-color: rgba(92, 107, 192, 0.8);
+   }
+   #tabsamples #t2{
+      background-color: rgba(255, 152, 0, 0.8);
+   }
+   #tabsamples #t3{
+      background-color: rgba(76, 175, 80, 0.8);
+   }
+   #tabsamples #t4{
+      background-color: rgba(33, 150, 243, 0.8);
+   }
+   #tabsamples #t5{
+      background-color: rgba(158, 224, 3, 0.8);
+   }
+   #tabsamples #t6{
+      background-color: rgba(171, 71, 188, 0.8);
+   }
+   #tabsamples #t7{
+      background-color: rgba(239, 83, 80, 0.8);
+   }
+   #tabsamples #t8{
+      background-color: rgba(141, 110, 99, 0.8);
+   }
+   #tabsamples {
+    height: 100%;
+   }
+
+   .spanny {
+    font-size: 0.5em;
+    padding: 0 10% 0 6%;
+    min-height: 0;
+  }
+ .fx .spanny {
+  height: 0px;
+  }
+  .sliders{
+    padding: 13% 10px 7px 10px;
+  }
+  .fx{
+    padding: 2px 8px 2px 8px;
+    width: 78%;
+  }
+  .downlabel {
+    max-width: 40%;
+  }
+  .dropdwn {
+    margin: 0px 0px;
+    -moz-appearance: none;
+    -webkit-appearance: none; 
+    appearance: none;
+    border-radius: 0px;
+    font-family: 'RobotoDraft', sans-serif;
+    font-size: 1em;
+    background-color: rgba(34,34,34,0.0);
+    border: 0px;
+    border-bottom: 1px solid #777;
+    padding-right:20%;
+    max-width: 100%;
+    overflow:hidden;
+    cursor: pointer; cursor: hand;
+  }
+  label {position:relative}
+  label:after {
+    content:'>';
+    font:1em 'RobotoDraft', monospace;
+    color:#777;
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform:rotate(90deg);
+    right:0px;
+    position:absolute;
+    pointer-events:none;
+  }
+  #sample_dropdwn {
+    margin-bottom: 8%;
+  }
+  #xy_bounder {
+    border: 5px solid;
+    border-color: rgb(92, 107, 192);
+    border-radius: 5px;
+  margin: 5% 0 4% 0;
+  height: 100%;
+  }
+  #xy {
+    border: 1px solid;
+    border-color: rgb(92, 107, 192);
+    background-color: rgba(34,34,34,0.4);
+    width: 100%;
+    height: 100%;
+    margin:0px;
+  }
+  #thing {
+    position: absolute;
+    /*top: 106px;*/
+    transition: left .2s ease-in, top .2s ease-in;
+    height: 10px;
+    width: 10px;
+    border: 5px solid;
+    border-color: rgb(92, 107, 192);
+    border-radius: 10px;
+    background-color: whitesmoke;
+  }
+  #fx_svg1 {
+    width:10%; 
+    min-width: 10px;
+    height:100%;
+  }
+  #fx_svg2 {
+    width: 20%;
+    min-width: 20px;
+    height: 100%;
+  }
+  #modspanny1{
+    margin:5% 0 0 0;
+   }
+   #modspanny2{
+    margin:-.7% 0 2% 0; 
+    padding-right:12px;
+   }
+ /*PHONES*/
+  @media (max-width: 399px), (max-height: 399px) {
+    #innertabs{
+     font-size: .3em;
+   }
+   .spanny {
+    font-size: .4em;
+   }
+   #modspanny1{
+    margin: 2% 0 2% 0;
+    padding: 0 0 0 6%;
+   }
+   #modspanny2{
+    margin: -2.7% 0 2% 0;
+   }
+   /*.sliders{
+      padding: 6px 10px 7px 10px;
+    }*/
+
+  }
+
+  #beat_row_1 {
+    width: 80%;
+    margin: auto;
+    background-color: #ccc;
+  }
+  #beat_row_3 {
+    width: 80%;
+    margin: auto;
+    background-color: #ccc;
+  }
+  #beat_row_2 {
+    background-color: #ccc;
+  }
+  #beat_row_4 {
+    background-color: #ccc;
+  }
+  .s{
+    background-color: #bbc;
+    outline: 1px solid #ccc;
+    opacity: 0.6;
+    cursor: default;
+    box-shadow: 2px 2px 10px #444;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    padding:0;
+    min-width:0;
+    min-height: 0;
+  }
+  .box {
+    overflow:hidden;
+    border-radius: 0px;
+    font-size: .75rem;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    margin:1px;
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.4);
+  }
+  #beat_central_container{
+    background: radial-gradient(#222,#eee); /* Standard syntax */
+    -webkit-touch-callout: none;
+      -webkit-user-select: none; 
+      -moz-user-select: none; 
+      -ms-user-select: none; 
+      -o-user-select: none; 
+      user-select: none;
+  }
+  #middle_container {
+    margin:10%;
+    height: 100%;
+  }
+  drag-avatar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: block;
+    pointer-events: none;
+  }
+  paper-button {
+    min-width: 4em;
+  }
+
+  
+
+</style>
+
+<template>
+
+<div class="vertical layout" id="beat_container">
+
+
+
+
+    <ul class="flex-1 layout horizontal" id="beat_row_1" >
+      <div id="a" class="s" ></div>
+      <div id="b" class="s" ></div>
+      <div id="c" class="s" ></div>
+      <div id="d" class="s" ></div>
+      <div id="e" class="s" ></div>
+      <div id="f" class="s" ></div>
+      <div id="g" class="s" ></div>
+      <div id="h" class="s" ></div>
+    </ul>
+    <div class="layout horizontal flex-8" id="beat_inner_container">
+      <ul class="flex-1 layout vertical-reverse" id="beat_row_4" >
+        <div id="y" class="s" ></div>
+        <div id="z" class="s" ></div>
+        <div id="za" class="s" ></div>
+        <div id="zb" class="s" ></div>
+        <div id="zc" class="s" ></div>
+        <div id="zd" class="s" ></div>
+        <div id="ze" class="s" ></div>
+        <div id="zf" class="s" ></div>
+      </ul>
+      <div class="layout center flex-8" id="beat_central_container">
+
+
+        <div class="vertical layout center" id="middle_container">
+          <paper-tabs class="horizontal layout" id="innertabs" selected="0">
+            <paper-tab class="flex" name="0" id="kittab">Kit</paper-tab>
+            <paper-tab class="flex" name="1" id="fxtab">FX</paper-tab>
+            <paper-tab class="flex" name="2" id="modtab">Mod</paper-tab>
+          </paper-tabs>
+
+          <neon-animated-pages id="innerpages" style="height:85%;width:100%;" selected="0" entry-animation="fade-in-animation" exit-animation="scale-down-animation">
+
+          <neon-animatable class='hundo flex'>
+            <div class="flex vertical layout drumkit_container" unselectable='on' onselectstart='return false;' touch-action="none">
+              <!--<core-drag-drop></core-drag-drop>-->
+              <div class="flex horizontal layout">
+                <paper-button class="box" id="firstbox" style="background-color: #5C6BC0;" on-track="handleTrack" on-tap="play_samp1" onmousedown='return false;'>{{name1}}</paper-button>
+                <paper-button class="box" style="background-color: #FF9800;" on-track="handleTrack" on-tap="play_samp2">{{name2}}</paper-button>
+                <paper-button class="box" id="thirdbox" style="background-color: #4CAF50;" on-track="handleTrack" on-tap="play_samp3">{{name3}}</paper-button>
+              </div>
+              <div class="flex horizontal layout">
+                <paper-button class="box" style="background-color: #2196F3;" on-track="handleTrack" on-tap="play_samp4">{{name4}}</paper-button>
+                <paper-button class="box" style="background-color: #bbc;" on-track="handleTrack">erase</paper-button>
+                <paper-button class="box" id="fifthbox" style="background-color: #9EE003;" on-track="handleTrack" on-tap="play_samp5">{{name5}}</paper-button>
+              </div>
+              <div class="flex horizontal layout">
+                <paper-button class="box" style="background-color: #AB47BC;" on-track="handleTrack" on-tap="play_samp6">{{name6}}</paper-button>
+                <paper-button class="box" id="seventhbox" style="background-color: #EF5350;" on-track="handleTrack" on-tap="play_samp7">{{name7}}</paper-button>
+                <paper-button class="box" style="background-color: #8D6E63;" on-track="handleTrack" on-tap="play_samp8">{{name8}}</paper-button>
+              </div>
+            </div>
+          </neon-animatable><!--end kit-->
+        
+
+        <neon-animatable class='hundo flex'>
+          <div class="vertical layout drumkit_container">
+          <div class="flex vertical layout around-justified sliders">
+
+          <div class="flex" style="min-height:0;">
+           <div class="horizontal layout justified spanny"><span style="white-space: nowrap;">Reverb: <b>{{reverb_setting}}</b></span>
+            <label class="downlabel"><select id='reverbselect' class="dropdwn" onchange="reverbDropChange(this.selectedIndex);">
+             <option>digital short</option>
+             <option>digital long</option>
+             <option>church</option>
+             <option>factory</option>
+             <option>hall</option>
+             <option>spring</option>
+             <option>bucket</option>
+             <option>djembe</option>
+             <option>echo</option>
+             <option>pot</option>
+             <option>telephone</option>
+             <option>vacuum</option>
+            </select></label>
+           </div>
+         <paper-slider pin value="30" on-immediate-value-change="REchange" on-value-change="REchange" id="verbslider"></paper-slider>
+         </div>
+            
+
+
+          <div class="flex" style="min-height:0;">
+             <div class="horizontal layout justified spanny"><span style="white-space: nowrap;">Filter: <b>{{filter_cutoff}}</b></span>
+              <label class="downlabel"><select id="filter_dd" class="dropdwn" onchange="filterDropChange(this.selectedIndex);">
+               <option selected>lowpass</option>
+               <option>highpass</option>
+               <option>lowpass, Q</option>
+               <option>highpass, Q</option>
+               <option>lowpass, high Q</option>
+               <option>highpass, high Q</option>
+              </select></label>
+            </div>
+         <paper-slider pin value="100" on-immediate-value-change="FCchange" on-value-change="FCchange" id="filterslider"></paper-slider>
+         </div>
+        
+          <div class="flex" style="min-height:0;">
+             <div class="horizontal layout justified spanny"><span style="white-space: nowrap;">Compress: <b>{{compressor_setting}}</b></span>
+               <label class="downlabel"><select id="compressor_dd" class="dropdwn" onchange="compressorDropChange(this.selectedIndex);">
+                <option selected>normal ratio</option>
+                <option>low ratio</option>
+                <option>high ratio</option>
+                <option>normal ratio, hard knee</option>
+                <option>low ratio, hard knee</option>
+                <option>high ratio, hard knee</option>
+               </select></label>
+             </div>
+             <paper-slider pin value="30" on-immediate-value-change="COchange" on-value-change="COchange" id="cslider"></paper-slider>
+            </div>
+
+       </div>
+      </div>
+     </neon-animatable><!--end master-->
+
+   <neon-animatable class='hundo flex'>
+    
+      <div class="horizontal layout drumkit_container">
+
+       <div class="fx flex-6 vertical layout around-justified">
+        <div id="modspanny1" class="flex-1 horizontal layout justified spanny">
+                    
+        <label><select class="dropdwn" id="sample_dropdwn" onchange="effectDropChange(this.value);" name="type">
+           <option selected value="pf">pitch / fade</option>
+           <option value="pc">pan / crush</option>
+           <option value="d">delay</option>
+         </select></label>
+
+        <paper-toggle-button id="anim" class="anim" on-change="anim_click"></paper-toggle-button>
+        </div>
+
+       <div class="flex-8 vertical layout" id="xy_bounder">
+       <paper-button style="overflow:hidden;" class="flex" on-up="getClickPosition" on-track="getClickPosition" onclick='return false;' id="xy">
+        <div id="thing" touch-action="none" onclick='return false;'></div>
+       </paper-button>
+       </div>
+
+       <div id="modspanny2" class="flex-1 horizontal layout around-justified spanny">
+          
+          <span style="white-space: nowrap;" class="horizontal layout center">
+                <svg id="fx_svg1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 60 100" xml:space="preserve">
+              <polyline id="fxxpolyline" style="fill:none;stroke:black;stroke-width:6;" stroke-linecap="round" stroke-linejoin="round" points="0.375,20.375 45.63,58.087 0.375,95.8 "/></svg>
+          <span id="fx_ui1" on-tap="fxui1_click" style="cursor: pointer; cursor: hand; margin: 0 5px">Pitch: </span><b>{{x_pos}}</b></span>
+
+          <span style="white-space: nowrap;" class="horizontal layout center">
+              <svg id="fx_svg2" viewBox="0 0 90 50" xml:space="preserve">
+              <polyline style="fill:none;stroke:black;stroke-width:4" stroke-linecap="round" stroke-linejoin="round" points="0.375,38.087 38.087,0.375 75.8,38.087 "/></polyline></svg>
+          <span id="fx_ui2" on-tap="fxui2_click" style="cursor: pointer; cursor: hand; margin: 0 5px">Fade: </span><b>{{y_pos}}</b></span>
+
+       </div>
+
+       </div>
+       
+       <paper-vert-tabs align-left class="flex-1 vert self-end" id="tabsamples" selected="{{sample_selected}}">
+          <paper-tab id="t1" on-tap="play_samp1" name="1"></paper-tab>
+          <paper-tab id='t2' on-tap="play_samp2" name="2"></paper-tab>
+          <paper-tab id='t3' on-tap="play_samp3" name="3"></paper-tab>
+          <paper-tab id='t4' on-tap="play_samp4" name="4"></paper-tab>
+          <paper-tab id='t5' on-tap="play_samp5" name="5"></paper-tab>
+          <paper-tab id='t6' on-tap="play_samp6" name="6"></paper-tab>
+          <paper-tab id='t7' on-tap="play_samp7" name="7"></paper-tab>
+          <paper-tab id='t8' on-tap="play_samp8" name="8"></paper-tab>
+      </paper-vert-tabs>
+     </div>
+   </neon-animatable><!--end effects-->
+
+</div> <!--end middle container-->
+
+
+  </div>
+  <ul class="flex-1 layout vertical" id="beat_row_2">
+    <div id="i" class="s" draggable="true"></div>
+    <div id="j" class="s"></div>
+    <div id="k" class="s"></div>
+    <div id="l" class="s"></div>
+    <div id="m" class="s"></div>
+    <div id="n" class="s"></div>
+    <div id="o" class="s"></div>
+    <div id="p" class="s"></div>
+  </ul>
+</div>
+<ul class="flex-1 layout horizontal-reverse" id="beat_row_3">
+  <div id="q" class="s"></div>
+  <div id="r" class="s"></div>
+  <div id="s" class="s"></div>
+  <div id="t" class="s"></div>
+  <div id="u" class="s"></div>
+  <div id="v" class="s"></div>
+  <div id="w" class="s"></div>
+  <div id="x" class="s"></div>
+</ul>
+</div>
+
+</template>
+
+
+<script>
+
+
+Polymer({
+
+  is: 'beat-card',
+
+  /*behaviors: [
+      Polymer.IronResizableBehavior
+  ],
+
+  listeners: {
+      'iron-resize': '_onResize'
+  },*/
+
+  properties: {
+    sample_selected: {
+      type: Number,
+      value: 0,
+      observer: 'sample_selectedChanged' 
+    },
+    filter_cutoff: {
+      type: Number,
+      value: 100,
+      observer: 'filter_cutoffChanged',
+    },
+    reverb_setting: {
+      type: Number,
+      value: 30,
+      observer: 'reverb_settingChanged'
+    },
+    compressor_setting: {
+      type: Number,
+      value: 30,
+      observer: 'compressor_settingChanged'
+    },
+    x_pos: {
+      type: Number,
+      value: 0,
+      observer: 'x_posChanged'
+    },
+    y_pos: {
+      type: Number,
+      value: 0
+    },
+    name1: {
+      type:String,
+      value:'kick',
+    },
+    name2: {
+      type:String,
+      value:'snare',
+    },
+    name3: {
+      type:String,
+      value:'hihat',
+    },
+    name4: {
+      type:String,
+      value:'kick808',
+    },
+    name5: {
+      type:String,
+      value:'bells',
+    },
+    name6: {
+      type:String,
+      value:'jawharp',
+    },
+    name7: {
+      type:String,
+      value:'clap',
+    },
+    name8: {
+      type:String,
+      value:'clave',
+    },
+  },
+
+  scaleToX: function(x) {
+    var w=this.xywidth/2;
+    var xval=x/(100/w)+w-12;
+    return xval;
+  },
+  scaleToY: function(y) {
+    var yval=(y*-1)/(100/this.xyheight)+this.xyheight-10;
+    return yval;
+  },
+
+  REchange: function(e) {
+    this.reverb_setting=e.target.immediateValue;
+  },
+  FCchange: function(e) {
+    this.filter_cutoff=e.target.immediateValue;
+  },
+  COchange: function(e) {
+    this.compressor_setting=e.target.immediateValue;
+  },
+
+  sample_selectedChanged: function() {
+    sample_selected=this.sample_selected+1;
+    var getter = this.$.xy;
+        getter.style.borderColor=color_array[sample_selected];
+        var getter2=this.$.xy_bounder;
+        getter2.style.borderColor=color_array[sample_selected];
+        
+        var thing=this.$.thing;
+        thing.style.borderColor=color_array[sample_selected];
+        thing.style.transition='left 0s ease-in, top 0s ease-in';
+        this.set_translate(thing, 0);
+        if (Beats.effect_selected=='pf') {
+          thing.style.left = this.scaleToX(Beats.FX.pitch[sample_selected])+'px';
+          thing.style.top = this.scaleToY(Beats.FX.gain[sample_selected])+'px';
+          this.x_pos=Beats.FX.pitch[sample_selected];
+          this.y_pos=Beats.FX.gain[sample_selected];
+        }
+        if (Beats.effect_selected=='pc') {
+            thing.style.left = this.scaleToX(Beats.FX.pan[sample_selected])+'px';
+            thing.style.top = this.scaleToY(Beats.FX.crush[sample_selected])+'px';
+            this.x_pos=Beats.FX.pan[sample_selected];
+            this.y_pos=Beats.FX.crush[sample_selected];
+        }
+        if (Beats.effect_selected=='d') {
+            thing.style.left = this.scaleToX(Beats.FX.delay_fb[sample_selected])+'px';
+            thing.style.top = this.scaleToY(Beats.FX.delay_time[sample_selected])+'px';
+            this.x_pos=Beats.FX.delay_fb[sample_selected];
+            this.y_pos=Beats.FX.delay_time[sample_selected];
+        }
+        toggleThingYellow(sample_selected, Beats.effect_selected, thing);
+        toggleToggle(sample_selected, Beats.effect_selected, this);
+  },
+  compressor_settingChanged: function() {
+      if (Main.ready==true) {
+        Beats.compressor_yo.threshold.value = (0-this.compressor_setting);
+        Beats.compressorSetting=this.compressor_setting;
+      }
+    },
+
+  //AWESOME just add Changed for an automatic EventListener
+  filter_cutoffChanged: function() {
+    if (Main.ready==true) {
+      var minValue = 40;
+      var maxValue = 22050;
+      //this math taken from HTML5rocks web audio page by Boris Smus
+      var numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2; //natural logarithm of 2 = 0.693
+      var multiplier = Math.pow(2, numberOfOctaves * (this.filter_cutoff/100.0 - 1.0));
+      Beats.filterCutoff = maxValue * multiplier;
+      Beats.filter_yo.frequency.value = Beats.filterCutoff+1;
+    }
+  },
+
+  reverb_settingChanged: function() {
+    if (Main.ready==true) {
+    if (this.reverb_setting==0 && Beats.reverb_on==true) {
+      Beats.wetGainNode.disconnect();
+      Beats.reverb_on=false;
+      //console.log('reverb disconnected');
+    }
+    else if (this.reverb_setting!=0 && Beats.reverb_on==true) {}
+    else {
+      Beats.wetGainNode.connect(Beats.convolver_yo);
+      Beats.reverb_on=true;
+      //console.log('reverb connected');
+    }
+
+    Beats.reverbSetting = this.reverb_setting;
+    Beats.dryGainNode.gain.value = 1-(Beats.reverbSetting/100.0);
+    Beats.wetGainNode.gain.value = (Beats.reverbSetting/100.0);
+    }
+  },
+
+  set_translate: function(e, pix) {
+    e.style["-webkit-transform"] = "translate("+ pix +"px,0px)";
+    e.style["-moz-transform"] = "translate(" + pix +"px,-0px)";
+    e.style["-ms-transform"] = "translate(" + pix + "px,-0px)";
+    e.style["-o-transform"] = "translate(" + pix  + "px,0px)";
+    e.style["transform"] = "translate(" + pix + "px,-0px)";
+  },
+
+  sample_pitch: {
+    type: Number,
+    value: 50,
+  },
+  sample_pitch_proxy: {
+    type: Number,
+    value: 50,
+  },
+  sample_level: {
+    type: Number,
+    value: 50,
+  },
+  sample_level_proxy: {
+    type: Number,
+    value: 50,
+  },
+
+  ready: function() {
+    var avatar;
+    avatar = document.createElement('drag-avatar');
+    document.body.appendChild(avatar);
+    this.avatar = avatar;
+    var pages = this.$.innerpages;
+    var tabs = this.$.innertabs;
+    var bounder = this.$.xy_bounder;
+    var bc=this;
+    tabs.addEventListener('iron-select', seleckt);
+    function seleckt() {
+      pages.selected=tabs.selected
+      if (pages.selected==2) {
+        bc.xyheight=bounder.clientHeight;
+        bc.xywidth=bounder.clientWidth;
+        bc.sample_selectedChanged();
+      }
+      tabs.removeEventListener('iron-select', seleckt);
+      window.setTimeout(addBack,501)
+    }
+    function addBack() {
+      tabs.addEventListener('iron-select', seleckt);
+    }
+
+    var id_list = this.$.beat_container.querySelectorAll('.s');
+      Beats.id_yo = Array.prototype.slice.call(id_list, 0);
+      Beats.id_yo.sort(function(a,b) {
+        if (a.id < b.id)
+          return -1;
+        if (a.id > b.id)
+          return 1;
+        return 0;
+      });
+
+    this.x_pos = 0;
+    this.y_pos=0;
+
+  },
+
+  getClickPosition: function(e) {
+    e.preventDefault();
+    var parentPosition;
+    if(e.target.id=='xy') {
+      parentPosition = getPosition(e.target);
+    }
+    else {
+      parentPosition = getPosition(e.target.parentNode);
+    }
+
+    var xPosition = e.detail.x - parentPosition.x; 
+    var yPosition = e.detail.y - parentPosition.y; 
+    xPosition = Math.max(Math.min(xPosition,this.xywidth),0);
+    yPosition = Math.max(Math.min(yPosition,this.xyheight),0);
+    console.log(xPosition, yPosition)
+
+    var xyheight=bc.xyheight;
+    var xywidth=bc.xywidth/2;
+
+    this.$.thing.style.left = (xPosition-12) + "px";
+    this.$.thing.style.top = (yPosition-10) + "px";
+
+    var x_poss=(xPosition-xywidth)*(100/xywidth);  
+    var y_poss=(xyheight-yPosition)*(100/xyheight);   
+
+    //set position
+    var samp = bc.sample_selected+1;
+    //now round to integer
+    bc.x_pos = Math.round(x_poss);
+    bc.y_pos = Math.round(y_poss);
+
+    if (Beats.effect_selected=='pf') {
+      Beats.FX.pitch[samp]=Math.round(x_poss);
+    Beats.FX.gain[samp] =Math.round(y_poss);
+    Beats.gain_nodes[samp].gain.value=1.0-(Beats.FX.gain[samp]/100);
+    }
+    else if (Beats.effect_selected=='pc') {
+      Beats.FX.pan[samp]=Math.round(x_poss);
+      Beats.FX.crush[samp] = Math.round(y_poss);
+      var pan=Beats.FX.pan[samp]/100.0;
+      var z = 1 - Math.abs(pan);
+      Beats.pan_nodes[samp].setPosition(pan,0,z);
+      shufflePanNodes(samp);
+      shuffleCrushNodes(samp);
+      //disconnect pan nodes if inactive...?
+    }
+    else if (Beats.effect_selected=='d') {
+      Beats.FX.delay_fb[samp]=Math.round(x_poss);
+      Beats.FX.delay_time[samp] = Math.round(y_poss);
+      shuffleDelayNodes(samp);
+      Beats.delay_nodes[samp].delayTime.value = Math.abs(Beats.FX.delay_time[samp])/100.0;
+      Beats.delay_fb_nodes[samp].gain.value= (Beats.FX.delay_fb[samp]/100.0)-0.1;
+    }
+
+    switch(e.type) {
+      case 'up':
+      thing.style.transition='left .2s ease-in, top .2s ease-in';
+      if (Beats.not_playing==true) {
+       bc.play_samp(samp);
+      }
+      break;
+      case 'track':
+      thing.style.transition='left 0s ease-in, top 0s ease-in';
+      break;
+    }
+
+    bc.is_anim=false;
+    bc.set_translate(thing, 0);
+  },
+
+  //these two are out of 100
+  
+  x_posChanged: function() {
+      var svgthing = this.$.fxxpolyline;
+      if (this.x_pos<0) {
+        svgthing.setAttribute("points","45.63,20.375 0.375,58.087 45.63,95.8");
+      }
+      else {svgthing.setAttribute("points","0.375,20.375 45.63,58.087 0.375,95.8");}
+  },
+  y_posChanged: function() {
+  },
+
+  fxui1_click: function() {
+    //click the name of the effect to turn it off
+    //var bc = document.getElementById('beat-card');
+    var thing = bc.$.thing;
+    var samp = bc.sample_selected+1;
+      bc.x_pos = 0;
+
+      thing.style.transition='left .2s ease-in, top .2s ease-in';
+
+      if (Beats.effect_selected=='pf') {
+        Beats.FX.pitch[samp]=0;
+        thing.style.backgroundColor='whitesmoke';
+        Beats.is_animating_pitch[samp]=false;
+        thing.style.left = this.scaleToX(0)+'px';
+      }
+      else if (Beats.effect_selected=='pc') {
+        Beats.FX.pan[samp]=0;
+        Beats.pan_nodes[samp].setPosition(0,0,0);
+        //shuffleCrushNodes(samp);
+        thing.style.backgroundColor='whitesmoke';
+        Beats.is_animating_pan[samp]=false;
+        thing.style.left = this.scaleToX(0)+'px';
+        shufflePanNodes(samp);
+        //disconnect pan nodes if inactive?
+      }
+      else if (Beats.effect_selected=='d') {
+        Beats.FX.delay_fb[samp]=0;
+        thing.style.backgroundColor='whitesmoke';
+        Beats.is_animating_feedback[samp]=false;
+        thing.style.left = this.scaleToX(0)+'px';
+        shuffleDelayNodes(samp);
+    }
+  },
+  fxui2_click: function() {
+    //var bc = document.getElementById('beat-card');
+    var thing = bc.$.thing;
+    var samp = bc.sample_selected+1;
+      bc.y_pos = 0;
+
+      if (Beats.effect_selected=='pf') {
+        Beats.FX.gain[samp] =0;
+      }
+      else if (Beats.effect_selected=='pc') {
+        Beats.FX.crush[samp] = 0;
+        shuffleCrushNodes(samp);
+      }
+      else if (Beats.effect_selected=='d') {
+        Beats.FX.delay_time[samp] = 0;
+        shuffleDelayNodes(samp);
+      }
+      thing.style.transition='left .2s ease-in, top .2s ease-in';
+      thing.style.backgroundColor='whitesmoke';
+      thing.style.top = this.scaleToY(0)+'px';
+  },
+
+  anim_click: function() {
+    //var bc = document.getElementById('beat-card');
+    var samp = bc.sample_selected+1;
+    var thing = bc.$.thing;
+    thing.style.transition='transform .2s ease-in-out';
+
+    if (Beats.effect_selected=='pf') {
+      if (this.$.anim.checked==true) {
+        thing.style.backgroundColor='#ff0';
+        Beats.is_animating_pitch[samp]=true;
+      }
+      else {
+        thing.style.backgroundColor='whitesmoke';
+        Beats.is_animating_pitch[samp]=false;
+        bc.set_translate(thing, 0);
+        bc.x_pos=Beats.FX.pitch[samp];
+      }
+    }
+    if (Beats.effect_selected=='pc') {
+      if (this.$.anim.checked==true) {
+        thing.style.backgroundColor='#ff0';
+        Beats.is_animating_pan[samp]=true;
+      }
+      else {
+        thing.style.backgroundColor='whitesmoke';
+        Beats.is_animating_pan[samp]=false;
+          var pan=Beats.FX.pan[samp]/100.0;
+        var z = 1 - Math.abs(pan);
+        Beats.pan_nodes[samp].setPosition(pan,0,z);
+       bc.set_translate(thing, 0);
+        bc.x_pos=Beats.FX.pan[samp];
+      }
+    }
+    if (Beats.effect_selected=='d') {
+      if (this.$.anim.checked==true) {
+        thing.style.backgroundColor='#ff0';
+        Beats.is_animating_feedback[samp]=true;
+      }
+      else {
+        thing.style.backgroundColor='whitesmoke';
+        Beats.is_animating_feedback[samp]=false;
+        bc.set_translate(thing, 0);
+        bc.x_pos=Beats.FX.delay_fb[samp];
+      }
+    }
+  },
+
+  pitch_anim: [0,0,0,0,0,0,0,0,0],
+  
+  pan_anim: [0,0,0,0,0,0,0,0,0],
+
+  feedback_anim: [0,0,0,0,0,0,0,0,0],
+
+  handleTrack: function(e) {
+    switch(e.detail.state) {
+      case 'start':
+        var color = window.getComputedStyle(e.target)['background-color']
+        this.avatar.style.cssText = 'display:block;border: 3px solid ' + color + '; width: 15px; height: 15px; border-radius: 15px; background-color: whitesmoke; z-index: 9;';
+        break;
+      case 'track':
+          var x = e.detail.x, y = e.detail.y;
+          this.avatar.style.transform = 
+            this.avatar.style.webkitTransform = 
+              'translate(' + x + 'px, ' + y + 'px)';
+        break;
+      case 'end':
+        this.avatar.style.display = 'none';
+        var color = window.getComputedStyle(e.target)['background-color']
+        var dropTarget = e.detail.hover();
+        if (color && dropTarget.classList[0] === 's') {
+          this.dropyo(color, dropTarget);
+        }
+        break;
+    }
+  },
+
+  dropyo: function(color, dropTarget) {
+      var id_name=dropTarget.id;
+      var spot=div_array.indexOf(id_name);
+        if(Beats.beats_array[spot]==0) {
+            dropTarget.style.background = color;
+            Beats.beats_array[spot]=color_array.indexOf(color);
+        }
+        else {
+          //if erasing 
+          if (color==color_array[0]) {
+            dropTarget.style.background = color;
+            Beats.beats_array[spot]=0;
+            Beats.beats_array2[spot]=0;
+          }
+          //if draggin in same color as already there (no duplicate samples)
+          else if (color==color_array[Beats.beats_array[spot]]) {
+            dropTarget.style.background = color;
+            Beats.beats_array[spot]=color_array.indexOf(color);
+            Beats.beats_array2[spot]=0;
+          }
+          //two samples simultaneously
+          else {
+            /*dropTarget.style.backgroundImage="-webkit-linear-gradient(left top, "+color+' 48%, '+color_array[Beats.beats_array[spot]]+" 52%)";
+            dropTarget.style.background="linear-gradient(to bottom right, "+color+' 48%, '+color_array[Beats.beats_array[spot]]+" 52%)";*/
+            dropTarget.style.background = "-webkit-linear-gradient(left top, "+color+' 48%, '+color_array[Beats.beats_array[spot]]+" 52%)";
+            dropTarget.style.background = "linear-gradient(to bottom right, "+color+' 48%, '+color_array[Beats.beats_array[spot]]+" 52%)";
+            Beats.beats_array2[spot]=color_array.indexOf(color_array[Beats.beats_array[spot]]);
+            Beats.beats_array[spot]=color_array.indexOf(color);
+          }
+        }
+            
+  },
+
+  play_samp: function(samp) {
+      playSound(bufferListy[samp-1], Audiocontext.currentTime, samp);
+    },
+
+  //this one records
+  play_a_samp: function(samp) { 
+
+    //this.async(function() {
+      if(Main.is_rec==true) {
+        var spot=Beats.setting-Beats.one;
+        if(spot== -1){spot=31};
+        if(Beats.beats_array[spot]==0) {
+          Beats.beats_array[spot]=samp;
+          Beats.id_yo[spot].style.backgroundColor=color_array[samp];
+        }
+        else if(Beats.beats_array[spot]==samp) {
+          //do nothing if same color 
+        }
+        else{
+          Beats.id_yo[spot].style.background="-webkit-linear-gradient(left top, "+color_array[samp]+' 48%, '+color_array[Beats.beats_array[spot]]+" 52%)";
+          Beats.id_yo[spot].style.background="linear-gradient(to bottom right, "+color_array[samp]+' 48%, '+color_array[Beats.beats_array[spot]]+" 52%)";
+          Beats.beats_array2[spot]=Beats.beats_array[spot]
+          Beats.beats_array[spot]=samp;
+        }
+      }
+    //},40); 
+    playSound(bufferListy[samp-1], Audiocontext.currentTime, samp);
+  },//
+
+  play_samp1: function() {
+     this.play_a_samp(1);
+   },
+
+   play_samp2: function() {
+     this.play_a_samp(2);
+   },
+
+   play_samp3: function() {
+     this.play_a_samp(3);
+   },
+
+   play_samp4: function() {
+    this.play_a_samp(4);
+  },
+
+  play_samp5: function() {
+    this.play_a_samp(5);
+  },
+
+  play_samp6: function() {
+    this.play_a_samp(6);
+  },
+
+  play_samp7: function() {
+    this.play_a_samp(7);
+  },
+
+  play_samp8: function() {
+    this.play_a_samp(8);
+  },
+
+  go_dude: function() {
+
+    var anim1;
+    var sc=document.getElementById('synth-card');
+
+      if (Beats.not_playing==false) {
+        Beats.not_playing=true;
+        this.is_anim=false;
+        sc.stop_note();
+      } //end if Beats.not_playing
+      else {
+         Beats.not_playing=false;
+         function goingyoyo() {
+            if (Beats.not_playing==false) {
+          
+          
+          //make a triagle wave
+          anim1=(Math.abs(Beats.setting-16)-8)*12.5/100.0;
+          //HERE IS THE LOOP TO AUTOMATE ALL EFFECTS! 
+                for (i=1; i<9; i++) {
+                  if (Beats.is_animating_pitch[i]==true) {
+                    this.pitch_anim[i]=anim1*Beats.FX.pitch[i];
+                    //actual pitch is automatically updated in playSound, from pitch_anim
+                  }
+                  if (Beats.is_animating_pan[i]==true) {
+                    //if (Beats.beats_array[Beats.setting]==i) {
+                      var pan=Beats.FX.pan[i]*anim1/100.0;
+                var z = 1 - Math.abs(pan);
+                Beats.pan_nodes[i].setPosition(pan,0,z);
+                    //}
+                  }
+                  if (Beats.is_animating_feedback[i]==true) {
+                    //if (Beats.beats_array[Beats.setting]==i) {
+                      Beats.delay_fb_nodes[i].gain.value= (Beats.FX.delay_fb[i]*anim1/100.0)-0.1;
+                    //}
+                  }
+                }
+              //AND HERE is THE UI ANIMATION...
+             if (this.$.innerpages.selected==2) {
+              var samp = this.sample_selected+1
+              //console.log('animating');
+              if (Beats.effect_selected=='pf') {
+                if (Beats.is_animating_pitch[samp]==true) {
+                  this.x_pos=Math.round(this.pitch_anim[samp]);
+                  var effect=Beats.FX.pitch[samp];
+                  this.thing_anim(effect);
+                }
+              }
+              else if (Beats.effect_selected=='pc') {
+                if (Beats.is_animating_pan[samp]==true) {
+                  this.pan_anim[samp]=anim1*Beats.FX.pan[samp];
+                  this.x_pos=Math.round(this.pan_anim[samp]);
+                  var effect=Beats.FX.pan[samp];
+                  this.thing_anim(effect);
+                }
+              }
+              else if (Beats.effect_selected=='d') {
+                if (Beats.is_animating_feedback[samp]==true) {
+                  this.feedback_anim[samp]=anim1*Beats.FX.delay_fb[samp];
+                  this.x_pos=Math.round(this.feedback_anim[samp]);
+                  var effect=Beats.FX.delay_fb[samp];
+                  this.thing_anim(effect);
+                }
+              }
+             }//end if central selected == effects
+             play_yo_yo(this,sc); //here's the call
+            this.async(goingyoyo, Beats.speed_setting/2);
+           }//end if is playing
+          } //end recursive function
+          this.async(goingyoyo, 1);
+      }
+  }, //end go_dude
+
+  is_anim: {
+    type: Boolean,
+    value: false,
+  },
+
+  thing_anim: function(effect) {
+    var thing=this.$.thing;
+    var bpm_yo=60000/Beats.speed_setting;
+    var bpms = 480/bpm_yo;
+      if (Beats.setting==1) {
+            thing.style.transition='transform '+bpms+'s ease-in-out';
+            thing.style.webkitTransition='-webkit-transform '+bpms+'s ease-in-out';
+            //var pix=this.scaleToX(effect*-2);//*-2.0;
+            var pix=this.animScale(effect)*-2.0;
+            this.set_translate(thing, pix);
+            this.is_anim=true;
+      }
+      else if (Beats.setting==16) {
+            thing.style.transition='transform '+bpms+'s ease-in-out';
+            thing.style.webkitTransition='-webkit-transform '+bpms+'s ease-in-out';
+            this.set_translate(thing, 0);
+            this.is_anim=true;
+      }
+      /*else if (this.is_anim==true) {
+        if (Beats.setting<16) {
+          thing.style.transition='transform '+bpms+'s ease-in-out';
+            thing.style.webkitTransition='-webkit-transform '+bpms+'s ease-in-out';
+            var pix=this.scaleToX(effect*-2);//*-2.0;
+            this.set_translate(thing, pix);
+        }
+        else {
+          thing.style.transition='transform '+bpms+'s ease-in-out';
+            thing.style.webkitTransition='-webkit-transform '+bpms+'s ease-in-out';
+            this.set_translate(thing, 0);
+        }
+      }*/
+  },
+
+  animScale: function(x) {
+    var xywidth=this.xywidth/2;
+    var xval=x/(100/xywidth);
+    return xval;
+  }
+
+});
+
+
+</script>
+</dom-module>
+

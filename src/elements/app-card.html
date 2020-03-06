@@ -1,0 +1,151 @@
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/av-icons.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
+<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/scale-down-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
+
+<link rel="import" href="menu-card.html">
+<link rel="import" href="topbar-card.html">
+<link rel="import" href="beat-card.html">
+<link rel="import" href="synth-card.html">
+<link rel="import" href="login-card.html">
+<link rel="import" href="collection-card.html">
+<link rel="import" href="save-card.html">
+<link rel="import" href="freesound-card.html">
+<link rel="import" href="color-card.html">
+<link rel="import" href="loader-item.html">
+<link rel="import" href="loader-example.html">
+
+<link rel="import" href="../bower_components/paper-vert-tabs/paper-vert-tabs.html">
+
+<dom-module id="app-card">
+
+  <link rel="import" type="css" href="app-card.css">
+
+  <template>
+
+  	
+      <paper-drawer-panel force-narrow="true" disable-swipe="true" drawer-width="240px" id="paperDrawerPanel" >
+
+        <paper-header-panel class="list-panel" drawer>
+
+          <!-- List Toolbar -->
+          <paper-toolbar id="listToolbar">
+            <div class="horizontal layout justified center drawer-icons">
+            Menu
+            </div>
+          </paper-toolbar>
+
+          <menu-card login="{{userName}}" id="menucard"></menu-card>
+
+
+        </paper-header-panel>
+
+        <paper-header-panel class="content-panel" id="cp" main>
+
+        <div id="toolybar"></div>
+
+        <div id="ubercontainer" class="flexy layout uberlayout fit center-justified" main>
+
+        <div id='master' class='flexy mastercontainer layout masterlayout'>
+
+        
+
+        <paper-tabs id="tabs" class="tabs1">
+          <paper-tab id="beatstab" name="0">Drum</paper-tab>
+          <paper-tab id="synthtab" name="1">Synth</paper-tab>
+        </paper-tabs>
+        
+        <!--align-left to align yellow bar left-->
+        <paper-vert-tabs id="tabs2" class="flexy tabs2">
+          <paper-tab id="beatstab2" name="0">Drum</paper-tab>
+          <paper-tab id="synthtab2" name="1">Synth</paper-tab>
+        </paper-vert-tabs>
+
+        <topbar-card id="topbar"></topbar-card>
+
+          <!-- Main Content -->
+          <div class="content" id="maincontent">
+            
+            <neon-animated-pages id="pages" selected="0" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+
+              <neon-animatable>
+                <beat-card id="beat-card"></beat-card>
+              </neon-animatable>
+
+              <neon-animatable>
+                <synth-card id="synth-card"></synth-card>
+              </neon-animatable>
+
+              
+              <neon-animatable><div class="vertical center layout">
+
+                <login-card id="lc" uid="{{uid}}" user-name="{{userName}}"></login-card>
+                
+              </div></neon-animatable>
+
+              <neon-animatable><div class="vertical center layout">
+                <collection-card id="cc" uid="{{uid}}" user-name="{{userName}}" sets="{{sets}}"></collection-card>
+              </div></neon-animatable>
+
+              <neon-animatable><div class="vertical center layout">
+                <save-card id="savecard" sets="{{sets}}" on-save="save" on-overwrite="overwrite"></save-card>
+              </div></neon-animatable>
+
+              <neon-animatable><div class="vertical center layout">
+                <freesound-card id="fc"></freesound-card>
+              </div></neon-animatable>
+
+            </neon-animated-pages>
+
+
+          </div>
+          </div>
+          </div>
+        </paper-header-panel>
+
+      </paper-drawer-panel>
+
+  </template>
+
+  <script>
+
+    
+
+    Polymer({
+
+      is: 'app-card',
+
+      save: function(e) {
+        this.$.cc.save(e);
+      },
+
+      overwrite: function(e) {
+        this.$.cc.overwrite(e)
+      },
+
+    });
+
+  </script>
+
+</dom-module>
